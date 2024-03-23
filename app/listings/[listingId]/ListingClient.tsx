@@ -134,7 +134,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
   //selectedTime
 
-  const [offTimes, setOffTime] = useState(listing.offTime);
+  const [offTimes, setOffTime] = useState(listing.offTime.length == 0? ['']:listing.offTime);
   const removeOffTime = (t: string) => {
     let f = offTimes;
     f = f.filter((time) => time !== t);

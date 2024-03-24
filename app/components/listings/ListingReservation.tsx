@@ -87,7 +87,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
           <button className="text-red-400" onClick={() => removeFeature(index)}>
             Cancel
           </button>
-          <button onClick={() => setIndex(index)}>
+          <button onClick={() => setIndex(index)} className=" text-sm sm:text-base">
             {selectedTimeFeature[index]?.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
           </button>
         </div>

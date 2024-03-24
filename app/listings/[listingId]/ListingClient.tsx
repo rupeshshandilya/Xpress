@@ -134,7 +134,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
   //selectedTime
 
-  const [offTimes, setOffTime] = useState(listing.offTime);
+  const [offTimes, setOffTime] = useState(listing.offTime.length == 0? ['']:listing.offTime);
   const removeOffTime = (t: string) => {
     let f = offTimes;
     f = f.filter((time) => time !== t);
@@ -264,7 +264,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
           try {
             const key = process.env.RAZORPAY_API_KEY;
             // Make API call to the serverless API
-            const data = await fetch("http://localhost:3000/api/razorpay", {
+            const data = await fetch("https://thexpresssalon.com/api/razorpay", {
               method: "POST",
               body: JSON.stringify({
                 totalPriceAfterTaxid: parseInt(totalPriceAfterTax),
@@ -288,7 +288,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
               }) {
                 console.log("HERE" + response);
                 const data = await fetch(
-                  "http://localhost:3000/api/paymentverify",
+                  "https://thexpresssalon.com/api/paymentverify",
                   {
                     method: "POST",
                     body: JSON.stringify({
@@ -304,7 +304,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
                 console.log("response verify==", res);
 
                 if (res?.message == "success") {
-                  fetch("http://localhost:3000/api/paymentregister", {
+                  fetch("https://thexpresssalon.com/api/paymentregister", {
                     method: "POST",
                     body: JSON.stringify({
                       listingId: listing?.id,
@@ -328,7 +328,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
                   router.refresh();
                   router.push("/upcoming");
                   const res = await fetch(
-                    "http://localhost:3000/api/paymentregister",
+                    "https://thexpresssalon.com/api/paymentregister",
                     {
                       method: "POST",
                       body: JSON.stringify({

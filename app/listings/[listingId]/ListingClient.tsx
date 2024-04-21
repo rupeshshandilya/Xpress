@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-base-to-string */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 //@tx-nocheck
 import { Range } from "react-date-range";
@@ -134,19 +140,28 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
   //selectedTime
 
-  const [offTimes, setOffTime] = useState(listing.offTime.length == 0? ['']:listing.offTime);
+  const [offTimes, setOffTime] = useState(listing.offTime.length == 0 ? [] : listing.offTime);
   const removeOffTime = (t: string) => {
     let f = offTimes;
     f = f.filter((time) => time !== t);
     setOffTime(f);
   };
   const addOffTime = (t: string) => {
-    let f = offTimes;
-    f.push(t);
-    setOffTime(f);
+    console.log(t)
+    if(t.length == 0){
+      toast.error("Please enter a valid Time");
+    }
+    else if (offTimes.includes(t)) {
+      toast.error("Time already added");
+    }
+    else{
+      const f = offTimes;
+      f.push(t);
+      setOffTime(f);
+    }
   };
   const updateOfftime = (t: string, i: number) => {
-    let f = offTimes;
+    const f = offTimes;
     f[i] = t;
     setOffTime(f);
   };
@@ -180,13 +195,17 @@ const ListingClient: React.FC<ListingClientProps> = ({
     await setEditFeatures(f);
     console.log(editFeatures);
   };
-  const addEditfeature = async (s: string, p: number) => {
-    let f = editFeatures;
-    await f.push({
-      service: s,
-      price: p,
+  const addEditfeature =  (s: string | undefined , p: number | undefined) => {
+    if(s == '' || p == 0){
+      toast.error("Please enter a valid Service and Price");
+      return;
+    }
+    const f = editFeatures;
+     f.push({
+      service: s!,
+      price: p!,
     });
-    await setEditFeatures(f);
+    setEditFeatures(f);
     console.log(editFeatures);
   };
   const updateEditfeature = async (s: string, p: number, i: number) => {
@@ -214,20 +233,20 @@ const ListingClient: React.FC<ListingClientProps> = ({
       });
   };
 
-  const onCreateReservation = useCallback(() => {
+  const onCreateReservation = useCallback(async() => {
+
+    console.log(selectedFeatures)
+    if(selectedFeatures.length == 0){
+      toast.error("Please select a Service");
+      return ;
+    }
     const total = selectedFeatures.reduce(
       (previous, current) => previous + current.price,
       0
     );
+    console.log(total)
     const totalPriceAfterTax = (total + total * taxRate).toFixed(2);
-    // console.log({
-    //   totalPrice: totalPriceAfterTax,
-    //   startDate: selectedTimeFeature,
-    //   startTime: [selectedTime],
-    //   listingId: listing?.id,
-    //   features: selectedFeatures,
-    // });
-    // Check if the selected date is already present in selectedTimeFeature
+    console.log(totalPriceAfterTax)
     const checkForDuplicates = (array: Date[]) => {
       const dateSet = new Set();
       for (const date of array) {
@@ -239,205 +258,144 @@ const ListingClient: React.FC<ListingClientProps> = ({
       return false;
     };
     if (checkForDuplicates(selectedTimeFeature)) {
-      // Handle the error condition when duplicates are found
       toast.error("Duplicate dates are not allowed. Please choose different time");
       return;
     }
-
-
     if (!currentUser) {
       return loginModal.onOpen();
     }
     setIsLoading(true);
-    axios
-      .post("/api/reservations", {
-        totalPrice: parseInt(totalPriceAfterTax),
-        startDate: selectedTimeFeature,
-        startTime: selectedTimeFeature,
-        listingId: listing?.id,
-        features: selectedFeatures,
-      })
-      .then(() => {
-        const makePayment = async () => {
-          // "use server"
-          // console.log("2")
-          try {
-            const key = process.env.RAZORPAY_API_KEY;
-            // Make API call to the serverless API
-            const data = await fetch("https://thexpresssalon.com/api/razorpay", {
-              method: "POST",
-              body: JSON.stringify({
-                totalPriceAfterTaxid: parseInt(totalPriceAfterTax),
-              }),
-            });
-            console.log(data);
-            const { order } = await data.json();
-            console.log(order.id);
-            const options = {
-              key: key as string,
-              name: "Xpress",
-              currency: order.currency,
-              amount: order.amount,
-              order_id: order.id,
-              description: "Understanding RazorPay Integration",
-              // image: logoBase64,
-              handler: async function (response: {
-                razorpay_payment_id: string;
-                razorpay_order_id: any;
-                razorpay_signature: any;
-              }) {
-                console.log("HERE" + response);
-                const data = await fetch(
-                  "https://thexpresssalon.com/api/paymentverify",
-                  {
-                    method: "POST",
-                    body: JSON.stringify({
-                      razorpay_payment_id: response.razorpay_payment_id,
-                      razorpay_order_id: response.razorpay_order_id,
-                      razorpay_signature: response.razorpay_signature,
-                    }),
-                  }
-                );
+    const makePayment = async () => {
+      try {
+        const key = process.env.RAZORPAY_API_KEY;
+        const data = await fetch("http://localhost:3000/api/razorpay", {
+          method: "POST",
+          body: JSON.stringify({
+            totalPriceAfterTaxid: parseInt(totalPriceAfterTax),
+          }),
+        });
+        console.log(data);
+        const { order } = await data.json();
+        console.log(order.id);
+        const options = {
+          key: key as string,
+          name: "Xpress",
+          currency: order.currency,
+          amount: order.amount,
+          order_id: order.id,
+          description: "Pay For Service",
+          // image: logoBase64,
+          handler: async function (response: {
+            razorpay_payment_id: string;
+            razorpay_order_id: any;
+            razorpay_signature: any;
+          }) {
+            console.log("HERE" + response);
+            const data = await fetch(
+              "http://localhost:3000/api/paymentverify",
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature,
+                }),
+              }
+            );
 
-                const res = await data.json();
+            const res = await data.json();
 
-                console.log("response verify==", res);
+            console.log("response verify==", res);
 
-                if (res?.message == "success") {
-                  fetch("https://thexpresssalon.com/api/paymentregister", {
-                    method: "POST",
-                    body: JSON.stringify({
-                      listingId: listing?.id,
-                      price: totalPriceAfterTax,
-                      title: listing?.title,
-                      category: listing?.category,
-                    }),
-                  })
-                    .then((res) => {
-                      if (res) {
+            if (res?.message == "success") {
+              fetch("http://localhost:3000/api/paymentregister", {
+                method: "POST",
+                body: JSON.stringify({
+                  listingId: listing?.id,
+                  price: totalPriceAfterTax,
+                  title: listing?.title,
+                  category: listing?.category,
+                }),
+              })
+                .then((res) => {
+                  if (res) {
+                    const saveRes = async() =>{
+
+                      await axios
+                      .post("/api/reservations", {
+                        totalPrice: parseInt(totalPriceAfterTax),
+                        startDate: selectedTimeFeature,
+                        startTime: selectedTimeFeature,
+                        listingId: listing?.id,
+                        features: selectedFeatures,
+                      }).then(() => {
                         toast.success("Reserved Successfully");
-                        window.location.href = "/upcoming";
-                      }
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                    });
-                  console.log("redirected.......");
-                  toast.success("Success");
-                  setDateRange(initialDateRange);
-                  router.refresh();
-                  router.push("/upcoming");
-                  const res = await fetch(
-                    "https://thexpresssalon.com/api/paymentregister",
-                    {
-                      method: "POST",
-                      body: JSON.stringify({
-                        listingId: listing.id!,
-                        price: totalPriceAfterTax,
-                      }),
+                        })
                     }
-                  );
-                  if (!res) throw new Error();
+                  saveRes().then(() => {console.log('reserved')}).catch((error) => {
+                    console.log(error);
+                  });
+                    window.location.href = "/upcoming";
+                  }
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+              console.log("redirected.......");
+              toast.success("Success");
+              setDateRange(initialDateRange);
+              router.refresh();
+              router.push("/upcoming");
+              const res = await fetch(
+                "http://localhost:3000/api/paymentregister",
+                {
+                  method: "POST",
+                  body: JSON.stringify({
+                    listingId: listing.id,
+                    price: totalPriceAfterTax,
+                  }),
                 }
-              },
-              prefill: {
-                name: "Xpress",
-                email: currentUser?.email || "",
-                contact: currentUser?.phoneNumber,
-              },
-            };
-            const paymentObject = new window.Razorpay(options);
-            paymentObject.open();
-            paymentObject.on("payment.failed", function () {
-              toast.error("Something went wrong");
-            });
-          } catch (err) {
-            console.log(err);
-            toast.error("Something went wrong");
-          }
+              );
+              if (!res) throw new Error();
+            }
+          },
+          prefill: {
+            name: "Xpress",
+            email: currentUser?.email || "",
+            contact: currentUser?.phoneNumber,
+          },
         };
-        makePayment();
-      })
-      .catch(() => toast.error("Something went wrong"))
-      .finally(() => {
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.open();
+        paymentObject.on("payment.failed", function () {
+          toast.error("Something went wrong");
+        });
+      }
+       catch (err) {
+        console.log(err);
+        toast.error("Something went wrong");
+      }
+      finally{
         setIsLoading(false);
-      });
+      }
+    };
+
+    await makePayment();
+
   }, [
+    selectedTimeFeature,
     selectedFeatures,
-    totalPrice,
-    selectedTime,
-    selectedDate,
     router,
+    totalPrice,
     currentUser,
     loginModal,
     listing?.id,
+    listing?.category,
+    listing?.title,
+
   ]);
 
-  // const onCreateReservation = useCallback(() => {
-  //   const total = selectedFeatures.reduce(
-  //     (previous, current) => previous + current.price,
-  //     0
-  //   );
-  //   const totalPriceAfterTax = (total + total * taxRate).toFixed(2);
-  //   console.log({
-  //     totalPrice: totalPriceAfterTax,
-  //     startDate: selectedDate,
-  //     startTime: selectedTime,
-  //     listingId: listing?.id,
-  //     features: selectedFeatures,
-  //   });
-  //   if (!currentUser) {
-  //     return loginModal.onOpen();
-  //   }
-  //   setIsLoading(true);
-  //   try {
-  //     const paymentHistory = async () => {
-  //       const res = await axios.post("/api/reservations", {
-  //         totalPrice: parseInt(totalPriceAfterTax),
-  //         startDate: selectedDate,
-  //         startTime: selectedTime,
-  //         listingId: listing?.id,
-  //         features: selectedFeatures,
-  //       });
-  //       console.log(res);
-  //     };
 
-  //     paymentHistory()
-  //       .then(() => {
-  //         fetch("http://localhost:3000/api/paymentregister", {
-  //           method: "POST",
-  //           body: JSON.stringify({
-  //             listingId: listing?.id,
-  //             price: totalPriceAfterTax,
-  //             title: listing?.title,
-  //             category: listing?.category,
-  //           }),
-  //         })
-  //           .then((res) => {
-  //             if (res) {
-  //               toast.success("Reserved Successfully");
-  //               window.location.href = "/upcoming";
-  //             }
-  //           })
-  //           .catch((error) => {
-  //             console.log(error);
-  //           });
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }, [
-  //   totalPrice,
-  //   selectedTime,
-  //   selectedDate,
-  //   router,
-  //   currentUser,
-  //   loginModal,
-  //   listing?.id,
-  // ]);
 
   const cate = useMemo(() => {
     return categories.find((item) => item.label === listing.category);

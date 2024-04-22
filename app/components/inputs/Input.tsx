@@ -53,6 +53,10 @@ const Input: React.FC<InputProps> = ({
         className={`
           peer
           w-full
+          file:mr-4 file:py-2 file:px-4
+      file:rounded-full file:border-0
+      file:text-sm file:font-semibold
+      file:bg-violet-50 file:text-violet-700
           p-4
           pt-6 
           font-light 

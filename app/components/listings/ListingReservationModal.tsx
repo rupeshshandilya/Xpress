@@ -193,28 +193,41 @@ const ListingReservationModal: React.FC<ListingReservationModalProps> = ({
                   const isOffTime = offTime.includes(format(hour, "HH:mm"));
                   const isDisabled = isReserved || isOffTime;
 
-                  return (
-                    <div key={hourIdx}>
-                      <button
-                        type="button"
-                        className={cn(
-                          "bg-green-200 rounded-lg px-2 text-gray-800 relative hover:border hover:border-green-400 w-[60px] h-[26px]",
-                          selectedTime &&
-                          isSameMinute(selectedTime, hour) &&
-                          "bg-black text-white",
-                          isDisabled && "bg-gray-400 cursor-not-allowed"
-                        )}
-                        onClick={() => handleTimeClick(hour)}
-                        disabled={isDisabled}
-                      >
-                        {format(hour, "HH:mm")}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+                return (
+                  <div key={hourIdx}>
+                    <button
+                      type="button"
+                      className={cn(
+                        "bg-green-200 rounded-lg px-2 text-gray-800 relative hover:border hover:border-green-400 w-[60px] h-[26px]",
+                        selectedTime &&
+                        isSameMinute(selectedTime, hour) &&
+                        "bg-black text-white",
+                        isDisabled && "bg-gray-400 cursor-not-allowed"
+                      )}
+                      onClick={() => handleTimeClick(hour)}
+                      disabled={isDisabled}
+                    >
+                      {format(hour, "HH:mm")}
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </div>
+        </div>
+        <hr />
+        <div className="flex flex-col">
+          <div className="relative p-4 w-full max-w-md max-h-full  rounded-lg shadow">
+            <div className="flex gap-2 items-center">
+              <h3 className="text-xl font-semibold text-gray-900 ">
+                Select Date for <br />
+                {features[modalKey].service}
+              </h3>
+
+            </div>
+          </div>
+          <hr />
+          <button onClick={() => handleClose(selectedDate)} className="bg-black text-white px-4 py-2 text-lg rounded-3xl mt-10 hover:bg-black/20">Confirm</button>
         </div>
       </div>
     </div>

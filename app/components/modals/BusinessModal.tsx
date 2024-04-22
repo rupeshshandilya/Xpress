@@ -17,6 +17,7 @@ import { Feature } from "@prisma/client";
 
 enum STEPS {
   CATEGORY = 0,
+
   AADHAAR = 1,
   INFO = 2,
   IMAGES = 3,
@@ -118,6 +119,7 @@ const BusinessModal = () => {
     // Send the form data to your server or perform further processing
     // (e.g., submitting to MongoDB)
     let res = Object.fromEntries(form);
+
     console.log(res);
     addAadhaar(res);
   };
@@ -172,8 +174,8 @@ const BusinessModal = () => {
       imageSrc: "",
       price: 1,
       title: "",
-      imageAadhaarFrontSrc: "",
-      imageAadhaarBackSrc: "",
+      aadhaarFrontImg: "",
+      aadhaarBackImg: "",
       description: "",
       features: [{ service: "", price: 0 }],
     },
@@ -219,15 +221,26 @@ const BusinessModal = () => {
     return "Back";
   }, [step]);
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (step !== STEPS.PRICE) {
       return onNext();
     }
 
-    setIsLoading(true);
+    const { aadhaar, aadhaarFrontImg, aadhaarBackImg } = data
+    if (!aadhaar || !aadhaarFrontImg || !aadhaarBackImg) return toast.error("Aadhaar required!!");
 
+    setIsLoading(true);
+    const frontImageBase64 = await convertImageToBase64(
+      aadhaarFrontImg[0] as File
+    );
+    const backImageBase64 = await convertImageToBase64(
+      aadhaarBackImg[0] as File
+    );
+    await addAadhaar({ aadhaar, aadhaarBackImg: backImageBase64, aadhaarFrontImg: frontImageBase64 })
     axios
-      .post("/api/listings", { ...data, features, offTime })
+      .post("/api/listings", {
+        ...data, features, offTime,
+      })
       .then(() => {
         // addAadhaar(data.aadhaar);
         toast.success("Listing created!");
@@ -278,21 +291,32 @@ const BusinessModal = () => {
     bodyContent = (
       <form className="flex flex-col gap-4" onSubmit={(e) => handleAadhaar(e)}>
         <Heading title="Required Aadhaar Number" />
-        <input type="text" placeholder="Enter aadhaar number" name="aadhaar" />
-
+        {/* <input type="text" placeholder="Enter aadhaar number" name="aadhaar" required /> */}
+        <Input
+          id="aadhaar"
+          label="aadhaar"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+        />
         <h1>Front Image of Aadhaar</h1>
-        <input
+        <Input
           type="file"
-          id="aadhaarFront"
-          name="aadhaarFrontImg"
-          onChange={handleImageChangeFront}
+          id="aadhaarFrontImg"
+          label="Aadhar Front Image"
+          register={register}
+          errors={errors}
+          required
         />
         <h1>Back Image of Aadhaar</h1>
-        <input
+        <Input
           type="file"
-          id="aadhaarBack"
-          name="aadhaarBackImg"
-          onChange={handleImageChangeBack}
+          id="aadhaarBackImg"
+          label="Aadhar Back Image"
+          register={register}
+          errors={errors}
+          required
         />
         <button
           type="submit"

@@ -148,7 +148,7 @@ const ListingReservationModal: React.FC<ListingReservationModalProps> = ({
         
         "
       >
-        <div className="bg-slate-200 flex justify-center rounded-md px-8 py-5 gap-2 relative">
+        <div className="bg-slate-200 max-sm:flex-col flex justify-center rounded-md px-8 py-5 gap-2 relative">
           <button
             onClick={() => handleClose(selectedDate)}
             type="button"

@@ -76,56 +76,59 @@ const BusinessModal = () => {
     getUser();
   }, []);
   const convertImageToBase64 = (file: File) => {
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
+    try {
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
 
-      reader.onload = () => {
-        const result = reader.result as string | null;
-        if (result) {
-          resolve(result.split(",")[1]); // Extract base64 data excluding the data URI prefix
-        } else {
-          reject(new Error("Failed to read file."));
-        }
-      };
+        reader.onload = () => {
+          const result = reader.result as string | null;
+          if (result) {
+            resolve(result.split(",")[1]); // Extract base64 data excluding the data URI prefix
+          } else {
+            reject(new Error("Failed to read file."));
+          }
+        };
 
-      reader.onerror = (error) => {
-        reject(error);
-      };
+        reader.onerror = (error) => {
+          reject(error);
+        };
 
-      reader.readAsDataURL(file);
-    });
-  };
-  const handleAadhaar = async (e: any) => {
-    e.preventDefault();
-    const formEvent = e.target;
-    const form = new FormData(formEvent);
-    // Convert front and back images to Base64
-    const aadhaarFrontImg = form.get("aadhaarFrontImg");
-    const aadhaarBackImg = form.get("aadhaarBackImg");
-
-    if (aadhaarFrontImg && aadhaarBackImg) {
-      const frontImageBase64 = await convertImageToBase64(
-        aadhaarFrontImg as File
-      );
-      const backImageBase64 = await convertImageToBase64(
-        aadhaarBackImg as File
-      );
-
-      // Include the Base64-encoded images in the form data
-      form.set("aadhaarFrontImg", frontImageBase64);
-      form.set("aadhaarBackImg", backImageBase64);
+        reader.readAsDataURL(file);
+      });
+    } catch (error) {
+      console.log(error)
     }
-
-    // Send the form data to your server or perform further processing
-    // (e.g., submitting to MongoDB)
-    let res = Object.fromEntries(form);
-
-    console.log(res);
-    addAadhaar(res);
   };
+  // const handleAadhaar = async (e: any) => {
+  //   e.preventDefault();
+  //   const formEvent = e.target;
+  //   const form = new FormData(formEvent);
+  //   // Convert front and back images to Base64
+  //   const aadhaarFrontImg = form.get("aadhaarFrontImg");
+  //   const aadhaarBackImg = form.get("aadhaarBackImg");
 
-  const addAadhaar = async (aadhaarinfo: unknown) => {
-    // if (!aadhaar || aadhaar.length !== 12) return;
+  //   if (aadhaarFrontImg && aadhaarBackImg) {
+  //     const frontImageBase64 = await convertImageToBase64(
+  //       aadhaarFrontImg as File
+  //     );
+  //     const backImageBase64 = await convertImageToBase64(
+  //       aadhaarBackImg as File
+  //     );
+
+  //     // Include the Base64-encoded images in the form data
+  //     form.set("aadhaarFrontImg", frontImageBase64);
+  //     form.set("aadhaarBackImg", backImageBase64);
+  //   }
+
+  //   // Send the form data to your server or perform further processing
+  //   // (e.g., submitting to MongoDB)
+  //   let res = Object.fromEntries(form);
+
+  //   console.log(res);
+  //   addAadhaar(res);
+  // };
+
+  const addAadhaar = async (aadhaarinfo: { aadhaar: string, aadhaarFrontImg: string, aadhaarBackImg: string }) => {
     try {
       setIsLoading(true);
       const { data } = await axios.patch("/api/addaadhaar", {
@@ -227,16 +230,19 @@ const BusinessModal = () => {
     }
 
     const { aadhaar, aadhaarFrontImg, aadhaarBackImg } = data
-    if (!aadhaar || !aadhaarFrontImg || !aadhaarBackImg) return toast.error("Aadhaar required!!");
+    if (aadhaar || aadhaarFrontImg || aadhaarBackImg) {
+      const frontImageBase64 = await convertImageToBase64(
+        aadhaarFrontImg[0] as File
+      );
+      const backImageBase64 = await convertImageToBase64(
+        aadhaarBackImg[0] as File
+      );
+      await addAadhaar({ aadhaar, aadhaarBackImg: backImageBase64 as string, aadhaarFrontImg: frontImageBase64 as string })
+    }
 
     setIsLoading(true);
-    const frontImageBase64 = await convertImageToBase64(
-      aadhaarFrontImg[0] as File
-    );
-    const backImageBase64 = await convertImageToBase64(
-      aadhaarBackImg[0] as File
-    );
-    await addAadhaar({ aadhaar, aadhaarBackImg: backImageBase64, aadhaarFrontImg: frontImageBase64 })
+
+
     axios
       .post("/api/listings", {
         ...data, features, offTime,
@@ -289,7 +295,7 @@ const BusinessModal = () => {
       setStep(STEPS.INFO);
     }
     bodyContent = (
-      <form className="flex flex-col gap-4" onSubmit={(e) => handleAadhaar(e)}>
+      <div className="flex flex-col gap-4" >
         <Heading title="Required Aadhaar Number" />
         {/* <input type="text" placeholder="Enter aadhaar number" name="aadhaar" required /> */}
         <Input
@@ -318,13 +324,8 @@ const BusinessModal = () => {
           errors={errors}
           required
         />
-        <button
-          type="submit"
-          className="mt-2 bg-red-500 font-semibold w-[100px] mx-auto text-white p-2 rounded"
-        >
-          Submit
-        </button>
-      </form>
+
+      </div>
     );
   }
   if (step === STEPS.INFO) {

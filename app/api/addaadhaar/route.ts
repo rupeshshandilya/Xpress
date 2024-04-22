@@ -13,7 +13,9 @@ export async function PATCH(request: Request) {
     const { aadhaar, aadhaarBackImg, aadhaarFrontImg } = body;
     if (!aadhaar || !aadhaarBackImg || !aadhaarFrontImg)
       throw new Error("Invalid aadhaar");
+    
     if (currentUser.aadhaar) throw new Error("aadhaar already exist");
+
     await prisma.user.update({
       where: {
         id: currentUser!.id!,

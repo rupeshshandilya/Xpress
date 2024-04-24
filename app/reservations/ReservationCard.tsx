@@ -113,9 +113,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
     let startTimeString = '';
     if (reservation.startTime.length > 0) {
-      // Choose the first start time from the array
-      const startTime = reservation.startTime[0];
-      startTimeString = format(startTime, "PPpp");
+      const startTime = new Date(reservation.startTime[0]);
+        startTimeString = format(startTime, "PPpp");
     }
     return startTimeString;
   }, [reservation]);

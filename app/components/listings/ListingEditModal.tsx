@@ -26,6 +26,11 @@ const ListingEditModal: React.FC<ListingEditModalProps> = ({
   updateOfftime,
   offtimes,
 }) => {
+  const [refresh,setRefresh] = useState(false);
+  const [newKeyword, setNewKeyword] = useState<string>();
+  const [newPrice, setNewPrice] = useState<number>();
+  const [newTime, setNewTime] = useState<string>();
+  console.log(offtimes)
   return (
     <>
       <div
@@ -105,26 +110,52 @@ const ListingEditModal: React.FC<ListingEditModalProps> = ({
                     <button
                       onClick={() => {
                         removeEditFeature(index);
+                        setRefresh(!refresh);
                         setVis(true);
                       }}
                       className="text-center  h-9 m-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       delete
                     </button>
-                    {editFeatures.length - 1 == index && (
-                      <button
-                        onClick={() => {
-                          addEditFeature("", 0);
-                          setVis(false);
-                          setVis(true);
-                        }}
-                        className="text-center  h-9 m-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      >
-                        +
-                      </button>
-                    )}
+                    
                   </div>
                 ))}
+                <div
+                    key={"elenot"}
+                    className="flex justify-center items-center"
+                  >
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      onChange={(e) => {
+                        setNewKeyword(e.target.value);
+                      }}
+                      value={newKeyword}
+                      className=" m-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      required
+                    />
+                    <input
+                      type="number"
+                      placeholder="Price"
+                      onChange={(e) => {
+                        setNewPrice(Number(e.target.value));
+                      }}
+                      value={newPrice}
+                      className="m-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      required
+                    />
+                    <button
+                      onClick={() => {
+                        addEditFeature(newKeyword!, newPrice!);
+                        setRefresh(!refresh);
+                        setVis(true);
+                      }}
+                      className="text-center  h-9 m-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Add
+                    </button>
+                    
+                  </div>
               </div>
               <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Off Time
@@ -147,31 +178,41 @@ const ListingEditModal: React.FC<ListingEditModalProps> = ({
                     <button
                       onClick={() => {
                         removeOfftime(offtimes[index]);
+                        setRefresh(!refresh);
                       }}
                       className="text-center  h-9 m-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       delete
                     </button>
-                    {editFeatures.length - 1 == index && (
-                      <button
-                        onClick={() => {
-                          addOfftime("");
-                          setVis(false);
-                          setVis(true);
-                          setVis(false);
-                          setVis(true);
-                          setVis(false);
-                          setVis(true);
-                          setVis(false);
-                          setVis(true);
-                        }}
-                        className="text-center  h-9 m-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      >
-                        +
-                      </button>
-                    )}
+                    
                   </div>
                 ))}
+                <div
+                    key={"elesdf"}
+                    className="flex justify-center items-center"
+                  >
+                    <input
+                      type="time"
+                      onChange={(e) => {
+                        setNewTime(e.target.value);
+                      }}
+                      value={newTime}
+                      className=" m-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      required
+                    />
+                    <button
+                      onClick={() => {
+                        addOfftime(newTime!);
+                        setRefresh(!refresh);
+                        
+                      
+                      }}
+                      className="text-center  h-9 m-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Add
+                    </button>
+                    
+                  </div>
 
                 <button
                   onClick={() => {

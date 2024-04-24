@@ -232,8 +232,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         window.location.reload();
       });
   };
-
-  const onCreateReservation = useCallback(async() => {
+const onCreateReservation = useCallback(async() => {
 
     console.log(selectedFeatures)
     if(selectedFeatures.length == 0){
@@ -365,7 +364,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
             contact: currentUser?.phoneNumber,
           },
         };
-        const paymentObject = new window.Razorpay(options);
+        const paymentObject  = new window.Razorpay(options);
         paymentObject.open();
         paymentObject.on("payment.failed", function () {
           toast.error("Something went wrong");
@@ -394,7 +393,6 @@ const ListingClient: React.FC<ListingClientProps> = ({
     listing?.title,
 
   ]);
-
 
 
   const cate = useMemo(() => {

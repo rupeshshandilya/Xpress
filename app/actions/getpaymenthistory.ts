@@ -1,3 +1,5 @@
+import prisma from "@/app/libs/prismadb";
+
 export async function getPaymentHistory() {
   try {
     const res = await prisma?.paymentHistory?.findMany({});

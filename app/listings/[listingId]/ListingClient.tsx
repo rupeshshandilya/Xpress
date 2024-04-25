@@ -1,11 +1,4 @@
-/* eslint-disable @typescript-eslint/no-base-to-string */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-//@tx-nocheck
 import { Range } from "react-date-range";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { categories } from "@/app/components/navbar/Categories";
@@ -29,6 +22,7 @@ import {
   startOfDay,
   startOfToday,
 } from "date-fns";
+import Razorpay from "razorpay";
 
 const initialDateRange = {
   startDate: new Date(),
@@ -232,8 +226,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         window.location.reload();
       });
   };
-
-  const onCreateReservation = useCallback(async() => {
+const onCreateReservation = useCallback(async() => {
 
     console.log(selectedFeatures)
     if(selectedFeatures.length == 0){
@@ -365,7 +358,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
             contact: currentUser?.phoneNumber,
           },
         };
-        const paymentObject = new window.Razorpay(options);
+        const paymentObject  = new window.Razorpay(options);
         paymentObject.open();
         paymentObject.on("payment.failed", function () {
           toast.error("Something went wrong");
@@ -394,7 +387,6 @@ const ListingClient: React.FC<ListingClientProps> = ({
     listing?.title,
 
   ]);
-
 
 
   const cate = useMemo(() => {

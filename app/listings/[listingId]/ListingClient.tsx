@@ -261,7 +261,7 @@ const onCreateReservation = useCallback(async() => {
     const makePayment = async () => {
       try {
         const key = process.env.RAZORPAY_API_KEY;
-        const data = await fetch("https://book.thexpresssalon.com/api/razorpay", {
+        const data = await fetch("http://localhost:3000/api/razorpay", {
           method: "POST",
           body: JSON.stringify({
             totalPriceAfterTaxid: parseInt(totalPriceAfterTax),
@@ -285,7 +285,7 @@ const onCreateReservation = useCallback(async() => {
           }) {
             console.log("HERE" + response);
             const data = await fetch(
-              "https://book.thexpresssalon.com/api/paymentverify",
+              "http://localhost:3000/api/paymentverify",
               {
                 method: "POST",
                 body: JSON.stringify({
@@ -301,7 +301,7 @@ const onCreateReservation = useCallback(async() => {
             console.log("response verify==", res);
 
             if (res?.message == "success") {
-              fetch("https://book.thexpresssalon.com/api/paymentregister", {
+              fetch("http://localhost:3000/api/paymentregister", {
                 method: "POST",
                 body: JSON.stringify({
                   listingId: listing?.id,
@@ -327,9 +327,7 @@ const onCreateReservation = useCallback(async() => {
                     }
                   saveRes().then(() => {console.log('reserved')}).catch((error) => {
                     console.log(error);
-                  });
-                    window.location.href = "/upcoming";
-                  }
+                  });                  }
                 })
                 .catch((error) => {
                   console.log(error);
@@ -338,9 +336,8 @@ const onCreateReservation = useCallback(async() => {
               toast.success("Success");
               setDateRange(initialDateRange);
               router.refresh();
-              router.push("/upcoming");
               const res = await fetch(
-                "https://book.thexpresssalon.com/api/paymentregister",
+                "http://localhost:3000/api/paymentregister",
                 {
                   method: "POST",
                   body: JSON.stringify({
@@ -349,6 +346,7 @@ const onCreateReservation = useCallback(async() => {
                   }),
                 }
               );
+              router.push("/upcoming");
               if (!res) throw new Error();
             }
           },

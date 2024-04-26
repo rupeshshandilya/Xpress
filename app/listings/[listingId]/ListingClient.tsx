@@ -315,7 +315,7 @@ const onCreateReservation = useCallback(async() => {
                     const saveRes = async() =>{
 
                       await axios
-                      .post("/api/reservations", {
+                      .post("https://book.thexpresssalon.com/api/reservations", {
                         totalPrice: parseInt(totalPriceAfterTax),
                         startDate: selectedTimeFeature,
                         startTime: selectedTimeFeature,

@@ -161,7 +161,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   };
   const applyOfftime = () => {
     axios
-      .patch(`/api/listings/${listing.id}`, {
+      .patch(`https://book.thexpresssalon.com/api/listings/${listing.id}`, {
         offTime: offTimes,
         features: editFeatures,
       })

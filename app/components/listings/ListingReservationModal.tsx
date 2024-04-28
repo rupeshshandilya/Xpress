@@ -60,6 +60,10 @@ const ListingReservationModal: React.FC<ListingReservationModalProps> = ({
   } else if (test.getHours() < 10) {
     nextDay = addHours(nextDay, 8 - test.getHours());
   }
+
+  const date = new Date();
+  let todayDate = date.getDate();
+
   const [selectedTime, setSelectedTime] = useState<Date>(
     new Date()
   );

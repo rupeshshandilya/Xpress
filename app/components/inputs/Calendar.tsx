@@ -1,5 +1,6 @@
 'use client';
 
+import { log } from 'console';
 import { DateRange, Range, RangeKeyDict } from 'react-date-range';
 
 import 'react-date-range/dist/styles.css';

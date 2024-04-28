@@ -15,7 +15,7 @@ interface ListingCardProps {
   data: SafeListing;
   reservation?: SafeReservation;
   onAction?: (id: string) => void;
-  handleVerify: (id: string) => void;
+  handleVerify: (id: string,otp:number) => void;
   disabled?: boolean;
   actionLabel?: string;
   actionId?: string;
@@ -43,6 +43,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   actionId = "",
   actionLabel,
   currentUser,
+
 }) => {
   const router = useRouter();
   const [otpInput, setOtpInput] = useState(new Array(6).fill(""));
@@ -60,7 +61,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
       const newOtpInput = [...otpInput];
       newOtpInput[index] = newOtpValue;
       setOtpInput(newOtpInput);
-
       // If a value is entered, move to the next field
       if (newOtpValue && index < otpInput.length - 1) {
         inputRefs.current[index + 1]?.focus();
@@ -79,7 +79,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
   const verifyOtp = () => {
     const otp = otpInput.join("");
     if (Number(otp) === reservation?.otp) {
-      handleVerify(reservation.id);
+      const newOtp = Number(otp)
+      handleVerify(reservation?.id, newOtp);
       handleClose();
     } else {
       toast.error("Wrong OTP");
@@ -114,7 +115,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
     let startTimeString = '';
     if (reservation.startTime.length > 0) {
       const startTime = new Date(reservation.startTime[0]);
-        startTimeString = format(startTime, "PPpp");
+      startTimeString = format(startTime, "PPpp");
     }
     return startTimeString;
   }, [reservation]);
@@ -154,7 +155,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
           <div className="flex  flex-row items-center gap-1">
             <div className="font-bold text-lg">₹ {price}</div>
           </div>
-          {onAction && actionLabel && (
+
+          {reservation?.otp && <>  {onAction && actionLabel && (
             <Button
               disabled={disabled}
               small
@@ -162,54 +164,54 @@ const ListingCard: React.FC<ListingCardProps> = ({
               onClick={handleCancel}
             />
           )}
-          {!(currentUser?.id != data.userId && reservation?.totalPrice) && (
-            <>
-              <Button onClick={handleOpen} label="enter otp"></Button>
-              <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <Box sx={style}>
-                  <div className="flex flex-row justify-center items-center space-x-2 my-6">
-                    {otpInput.map((_, index) => {
-                      return (
-                        <React.Fragment>
-                          <input
-                            key={index}
-                            ref={el => inputRefs.current[index] = el}
-                            maxLength={1}
-                            value={otpInput[index]}
-                            onChange={(e) => {
-                              handleOtpChange(e, index);
-                            }}
-                            type="text"
-                            className="w-12 h-12 border-2 rounded bg-transparent outline-none text-center font-semibold text-xl spin-button-none border-gray-400 focus:border-gray-700 focus:text-gray-700 text-gray-400 transition"
-                            onKeyUp={(e) => {
-                              if (e.key === "Backspace" && index > 0 && otpInput[index] === '') {
-                                inputRefs.current[index - 1]?.focus();
-                              }
-                            }}
-                          />
-                          {index === otp.length - 1 ? null : (
-                            <span className="w-2 py-0.5 bg-gray-400" />
-                          )}
-                        </React.Fragment>
-                      );
-                    })}
-                  </div>
-                  <Button
-                    disabled={disabled}
-                    small
-                    label="Verify"
-                    onClick={verifyOtp}
-                  />
-                </Box>
-              </Modal>
-              {console.log(reservation?.otp)}{" "}
-            </>
-          )}
+            {!(currentUser?.id != data.userId && reservation?.totalPrice) && (
+              <>
+                <Button onClick={handleOpen} label="enter otp"></Button>
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <div className="flex flex-row justify-center items-center space-x-2 my-6">
+                      {otpInput.map((_, index) => {
+                        return (
+                          <React.Fragment>
+                            <input
+                              key={index}
+                              ref={el => inputRefs.current[index] = el}
+                              maxLength={1}
+                              value={otpInput[index]}
+                              onChange={(e) => {
+                                handleOtpChange(e, index);
+                              }}
+                              type="text"
+                              className="w-12 h-12 border-2 rounded bg-transparent outline-none text-center font-semibold text-xl spin-button-none border-gray-400 focus:border-gray-700 focus:text-gray-700 text-gray-400 transition"
+                              onKeyUp={(e) => {
+                                if (e.key === "Backspace" && index > 0 && otpInput[index] === '') {
+                                  inputRefs.current[index - 1]?.focus();
+                                }
+                              }}
+                            />
+                            {index === otp.length - 1 ? null : (
+                              <span className="w-2 py-0.5 bg-gray-400" />
+                            )}
+                          </React.Fragment>
+                        );
+                      })}
+                    </div>
+                    <Button
+                      disabled={disabled}
+                      small
+                      label="Verify"
+                      onClick={verifyOtp}
+                    />
+                  </Box>
+                </Modal>
+                {console.log(reservation?.otp)}{" "}
+              </>
+            )}</>}
         </div>
       </div>
     </>

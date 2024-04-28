@@ -13,6 +13,7 @@ interface InputProps {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
   pattern?: string;
+  accept?: string
 }
 
 const Input: React.FC<InputProps> = ({
@@ -25,6 +26,7 @@ const Input: React.FC<InputProps> = ({
   required,
   errors,
   pattern = "",
+  accept = ""
 }) => {
   return (
     <div className="w-full relative">
@@ -41,6 +43,7 @@ const Input: React.FC<InputProps> = ({
       )}
       <input
         id={id}
+        accept={accept}
         disabled={disabled}
         {...register(id, {
           required,
@@ -53,6 +56,7 @@ const Input: React.FC<InputProps> = ({
         className={`
           peer
           w-full
+          file:cursor-pointer
           file:mr-4 file:py-2 file:px-4
       file:rounded-full file:border-0
       file:text-sm file:font-semibold

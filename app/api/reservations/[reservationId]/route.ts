@@ -75,3 +75,63 @@ export async function GET(request: Request, { params }: { params: IParams }) {
     );
   }
 }
+
+export async function PATCH(request: Request, { params }: { params: IParams }) {
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    return NextResponse.error();
+  }
+
+  const { reservationId: listingId } = params;
+  
+  if (!listingId || typeof listingId !== "string") {
+    throw new Error("Invalid Listing ID");
+  }
+
+  const { otp } = await request.json();
+
+  if (!otp) {
+    return NextResponse.json(
+      {
+        message: "OTP is required in the request body.",
+      },
+      { status: 400 }
+    );
+  }
+
+  const userReservedListing = await prisma.reservation.findFirst({
+    where: {
+      userId: currentUser.id,
+      listingId: listingId,
+    },
+  });
+
+  if (!userReservedListing) {
+    return NextResponse.json(
+      {
+        message: "User has not reserved a seat in the listing.",
+      },
+      { status: 400 }
+    );
+  }
+
+  if (userReservedListing.otp && userReservedListing.otp != otp) {
+    return NextResponse.json(
+      {
+        message: "Invalid OTP.",
+      },
+      { status: 400 }
+    );
+  }
+
+  const updatedReservation = await prisma.reservation.update({
+    where: { id: userReservedListing.id },
+    data: { otp: null },
+  });
+
+  return NextResponse.json({
+    message: "Reservation successfully confirmed.",
+    reservation: updatedReservation,
+  });
+}

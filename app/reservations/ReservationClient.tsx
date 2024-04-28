@@ -21,8 +21,8 @@ const ReservationsClient: React.FC<ReservationsClientProps> = ({
 }) => {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState('');
-  const [otpVis,setOtpVis] = useState(false)
-  const [otp,setOtp] = useState()
+  const [otpVis, setOtpVis] = useState(false)
+  const [otp, setOtp] = useState(null)
   const onCancel = useCallback(
     (id: string) => {
       setDeletingId(id);
@@ -42,32 +42,34 @@ const ReservationsClient: React.FC<ReservationsClientProps> = ({
     },
     [router]
   );
-  const verifyOTP= async (id: string) => {
-      setDeletingId(id);
+  const verifyOTP = async (id: string, otp: number) => {
+    setDeletingId(id);
 
-      axios
-        .delete(`/api/reservations/${id}`)
-        .then(() => {
-          toast.success('Booking Verified');
-          router.refresh();
-        })
-        .catch(() => {
-          toast.error('Something went wrong.');
-        })
-        .finally(() => {
-          setDeletingId('');
-          window.location.reload()
-        });
-    }
-  
- 
+    axios
+      .patch(`/api/reservations/${id}`, {
+        otp
+      })
+      .then(() => {
+        toast.success('Booking Verified');
+        router.refresh();
+      })
+      .catch(() => {
+        toast.error('Something went wrong.');
+      })
+      .finally(() => {
+        setDeletingId('');
+        window.location.reload()
+      });
+  }
+
+
 
   return (
     <>
-    <Container>
-      <Heading title="Reservations" subtitle="Bookings on your business" />
-      <div
-        className="
+      <Container>
+        <Heading title="Reservations" subtitle="Bookings on your business" />
+        <div
+          className="
           mt-10
           grid 
           grid-cols-1 
@@ -78,22 +80,22 @@ const ReservationsClient: React.FC<ReservationsClientProps> = ({
           2xl:grid-cols-6
           gap-8
         "
-      >
-        {reservations?.map((reservation: any) => (
-          <ListingCard
-            key={reservation.id}
-            data={reservation.listing}
-            reservation={reservation}
-            actionId={reservation.id}
-            onAction={onCancel}
-            handleVerify={verifyOTP} 
-            disabled={deletingId === reservation.id}
-            actionLabel="Cancel guest reservation"
-            currentUser={currentUser}
-          />
-        ))}
-      </div>
-    </Container>
+        >
+          {reservations?.map((reservation: any) => (
+            <ListingCard
+              key={reservation.id}
+              data={reservation.listing}
+              reservation={reservation}
+              actionId={reservation.id}
+              onAction={onCancel}
+              handleVerify={verifyOTP}
+              disabled={deletingId === reservation.id}
+              actionLabel="Cancel guest reservation"
+              currentUser={currentUser}
+            />
+          ))}
+        </div>
+      </Container>
     </>
   );
 };

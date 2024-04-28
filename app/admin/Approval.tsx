@@ -30,8 +30,25 @@ const Approval = ({ listingId, approved, userId }: Props) => {
     }
   }
 
+  const deleteListing = async () => {
+    try {
+      const { data } = await axios.delete(`api/deletelistings/${listingId}`)
+      if (data) {
+        toast.success("deleted Successfully");
+      }
+      else {
+        toast.error("Unable to delete");
+      }
+    }
+    catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      router.refresh();
+    }
+  }
+  
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 items-center justify-between sm:w-[60%]">
       {approved ? (
         <Button
           onClick={() => {
@@ -55,7 +72,9 @@ const Approval = ({ listingId, approved, userId }: Props) => {
           </Link>
         </div>
       )}
-    </div>
+
+      <Button sx={{ backgroundColor: "red", color: "white" }} onClick={deleteListing}>Delete</Button>
+    </div >
   );
 };
 

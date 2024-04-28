@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
   ];
 
   return (
-    <div className="w-full z-10 fixed border-none  outline-none  text-gray-400 shadow-sm ">
+    <div className="w-full z-10 fixed border-none outline-none text-gray-400 shadow-sm mb-8">
       <div className="flex flex-row justify-between items-center py-3 px-4 sm:px-20 bg-[#2C2C2C]">
         <div className="cursor-pointer" onClick={() => router.push('/')}>
           <Image

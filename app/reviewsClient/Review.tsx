@@ -73,7 +73,7 @@ const ReviewsClient = ({
         toast.error("Unable to give review");
       }
     } catch (error: any) {
-      if (error.response.status === 400) {
+      if (error.response.status === 400 || error.response.status === 404) {
         toast.error("First avail the service");
       }
       console.log(error);
@@ -169,7 +169,7 @@ const ReviewsClient = ({
                   <h1>{review.comment}</h1>
                 </div>
                 <div className="flex flex-col gap-1 ">
-                  {currentUser && (review.userId === currentUser?.id || currentUser?.role ==='ADMIN') ? (
+                  {currentUser && (review.userId === currentUser?.id || currentUser?.role === 'ADMIN') ? (
                     <div className="flex gap-2">
                       {isUpdating === review.id ? (
                         <button

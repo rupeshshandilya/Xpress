@@ -1,6 +1,4 @@
-
 import prisma from "@/app/libs/prismadb";
-
 
 export async function getPaymentHistory() {
   try {

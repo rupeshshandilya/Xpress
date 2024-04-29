@@ -41,7 +41,7 @@ const ReviewsClient = ({
     const getReviews = async () => {
       setIsLoading(true);
       try {
-        const { data } = await axios.get(`/api/reviews/${listingId}`);
+        const { data } = await axios.get(`https://book.thexpresssalon.com/api/reviews/${listingId}`);
         if (data) setReviews(data);
       } catch (error) {
         console.error(error);
@@ -56,13 +56,14 @@ const ReviewsClient = ({
     try {
       setIsLoading(true);
 
+      await axios.get(`https://book.thexpresssalon.com/api/reservations/${listingId}`);
       await axios.get(`/api/paymenthistory/${listingId}`);
 
       if (inputValue.length < 3)
         return toast.error("Review must be greater than 3 characters");
       if (inputValue.length > 150)
         return toast.error("Review must be less than 150 character");
-      const sendReview = await axios.post(`/api/reviews/${listingId}`, {
+      const sendReview = await axios.post(`https://book.thexpresssalon.com/api/reviews/${listingId}`, {
         userId: currentUser?.id,
         comment: inputValue,
       });
@@ -86,7 +87,7 @@ const ReviewsClient = ({
   const handleDelete = async (reviewId: string) => {
     setIsLoading(true);
     try {
-      const { data } = await axios.delete(`/api/reviews/${reviewId}`);
+      const { data } = await axios.delete(`https://book.thexpresssalon.com/api/reviews/${reviewId}`);
       if (data) {
         toast.success("review deleted successfully");
         window.location.href = "";
@@ -104,7 +105,7 @@ const ReviewsClient = ({
     try {
       if (inputValue.length < 3)
         return toast.error("Comment must be greater than 3 words");
-      const { data } = await axios.patch(`/api/reviews/${reviewId}`, {
+      const { data } = await axios.patch(`https://book.thexpresssalon.com/api/reviews/${reviewId}`, {
         comment: inputValue,
       });
       if (data) {

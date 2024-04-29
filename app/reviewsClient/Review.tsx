@@ -56,7 +56,7 @@ const ReviewsClient = ({
     try {
       setIsLoading(true);
 
-      await axios.get(`/api/reservations/${listingId}`);
+      await axios.get(`/api/paymenthistory/${listingId}`);
 
       if (inputValue.length < 3)
         return toast.error("Review must be greater than 3 characters");

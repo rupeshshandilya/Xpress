@@ -32,7 +32,7 @@ const Approval = ({ listingId, approved, userId }: Props) => {
 
   const deleteListing = async () => {
     try {
-      const { data } = await axios.delete(`api/deletelistings/${listingId}`)
+      const { data } = await axios.delete(`api/listings/${listingId}`)
       if (data) {
         toast.success("deleted Successfully");
       }
@@ -46,7 +46,7 @@ const Approval = ({ listingId, approved, userId }: Props) => {
       router.refresh();
     }
   }
-  
+
   return (
     <div className="flex gap-2 items-center justify-between sm:w-[60%]">
       {approved ? (

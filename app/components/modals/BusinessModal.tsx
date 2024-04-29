@@ -20,9 +20,10 @@ enum STEPS {
 
   AADHAAR = 1,
   INFO = 2,
-  IMAGES = 3,
-  DESCRIPTION = 4,
-  PRICE = 5,
+  ADDRESS=3,
+  IMAGES = 4,
+  DESCRIPTION = 5,
+  PRICE = 6,
 }
 
 const BusinessModal = () => {
@@ -177,6 +178,7 @@ const BusinessModal = () => {
       imageSrc: "",
       price: 1,
       title: "",
+      address:"",
       aadhaarFrontImg: "",
       aadhaarBackImg: "",
       description: "",
@@ -426,6 +428,25 @@ const BusinessModal = () => {
         <Input
           id="description"
           label="Description"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+        />
+      </div>
+    );
+  }
+
+  if (step === STEPS.ADDRESS) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Give Address Of Your Salon"
+          subtitle="Short and sweet works best!"
+        />
+        <Input
+          id="address"
+          label="Address"
           disabled={isLoading}
           register={register}
           errors={errors}

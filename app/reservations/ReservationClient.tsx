@@ -28,7 +28,7 @@ const ReservationsClient: React.FC<ReservationsClientProps> = ({
       setDeletingId(id);
 
       axios
-        .delete(`/api/reservations/${id}`)
+        .delete(`https://book.thexpresssalon.com/api/reservations/${id}`)
         .then(() => {
           toast.success('Booking cancelled');
           router.refresh();
@@ -47,6 +47,7 @@ const ReservationsClient: React.FC<ReservationsClientProps> = ({
 
     axios
       .delete(`/api/reservations/${id}`)
+
       .then(() => {
         toast.success('Booking Verified');
         router.refresh();

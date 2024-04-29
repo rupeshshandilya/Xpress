@@ -8,6 +8,7 @@ import Button from "../Button";
 import { Feature } from "@prisma/client";
 import { useState } from "react";
 import ListingEditModal from "./ListingEditModal";
+import Link from "next/link";
 
 interface ListingInfoProps {
   user: SafeUser;
@@ -33,6 +34,7 @@ interface ListingInfoProps {
   updateOfftime: (i: string, n: number) => void;
   offtimes: string[];
   selectedDate: Date;
+  address: string;
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
@@ -51,11 +53,21 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   addOfftime,
   updateOfftime,
   offtimes,
+  address,
 }) => {
   const [modalVis, setModalVis] = useState(false);
   const handleIsReservationModal = (index: number) => {
     addFeature(index);
   };
+
+  const googleMapLink = (address: string) => {
+    const baseUrl = "https://www.google.com/maps/search/?api=1&query=" ;
+    const encodedAddress = encodeURIComponent(address);
+    return baseUrl + encodedAddress;
+  }
+
+  address = googleMapLink(address);
+
   return (
     <>
       <div className="col-span-4 flex flex-col gap-8">
@@ -73,6 +85,9 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
             <div>Owner {user?.name}</div>
             <Avatar src={user?.image} />
           </div>
+            <Link href={address}>
+              Click to get Address
+            </Link>
           <div
             className="
           

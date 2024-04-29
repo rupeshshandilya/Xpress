@@ -46,9 +46,8 @@ const ReservationsClient: React.FC<ReservationsClientProps> = ({
     setDeletingId(id);
 
     axios
-      .patch(`https://book.thexpresssalon.com/api/reservations/${id}`, {
-        otp
-      })
+      .delete(`/api/reservations/${id}`)
+
       .then(() => {
         toast.success('Booking Verified');
         router.refresh();

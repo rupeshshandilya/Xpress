@@ -67,8 +67,7 @@ model Listing {
   createdAt     DateTime  @default(now())
   category      String
   time          String?
-  bathroomCount Int?
-  guestCount    Int?
+  address       String
   // locationValue String
   userId        String    @db.ObjectId
   price         Int

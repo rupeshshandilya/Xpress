@@ -459,6 +459,7 @@ const onCreateReservation = useCallback(async() => {
               updateOfftime={updateOfftime}
               offtimes={offTimes}
               selectedDate={selectedDate}
+              address={listing?.address}
             />
             <Reviews
               listingId={listing.id}

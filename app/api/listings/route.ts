@@ -3,6 +3,12 @@ import { NextResponse } from 'next/server';
 import prisma from '@/app/libs/prismadb';
 import getCurrentUser from '@/app/actions/getCurrentUser';
 
+function createGoogleMapsLink(address: string) {
+  const baseUrl = "https://www.google.com/maps/search/?api=1&query=";
+  const encodedAddress = encodeURIComponent(address);
+  return baseUrl + encodedAddress;
+}
+
 export async function POST(request: Request) {
   const currentUser = await getCurrentUser();
 
@@ -19,6 +25,7 @@ export async function POST(request: Request) {
     time,
     features,
     price,
+    address,
     offTime
   } = body;
 
@@ -28,6 +35,9 @@ export async function POST(request: Request) {
     }
   });
 
+
+  const googleMapsLink = createGoogleMapsLink(address);
+
   const listing = await prisma.listing.create({
     data: {
       title,
@@ -35,6 +45,7 @@ export async function POST(request: Request) {
       imageSrc,
       category,
       time,
+      address,
       features,
       price: parseInt(price, 10),
       userId: currentUser.id,

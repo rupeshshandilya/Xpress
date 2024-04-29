@@ -115,16 +115,16 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
             <div key={index} className="feature grid grid-cols-3 py-2">
               {feature.service}
               <div className="">₹{feature.price}</div>
-              <button
+              {/* <button
                 className="text-red-400"
                 onClick={() => removeFeature(index)}
               >
                 Cancel
-              </button>
+              </button> */}
             </div>
           ))}
           <div className="grid grid-cols-3">
-            <div>Tax(2%)</div>
+            <div>Tax(8%)</div>
             <div>₹{taxPrice.toFixed(2)}</div>
           </div>
         </div>

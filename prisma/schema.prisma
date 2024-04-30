@@ -80,7 +80,7 @@ model Listing {
   user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   reservations   Reservation[]
   PaymentHistory PaymentHistory[]
-  Review         Review[]
+  Review         Review[]       
 }
 
 model Reservation {
@@ -107,8 +107,8 @@ model PaymentHistory {
   createdAt DateTime @default(now())
   title     String
   category  String
-  user      User     @relation(fields: [userId], references: [id])
-  listing   Listing  @relation(fields: [listingId], references: [id])
+  user      User     @relation(fields: [userId], references: [id],onDelete:Cascade)
+  listing   Listing  @relation(fields: [listingId], references: [id],onDelete:Cascade)
 }
 
 model Review {
@@ -118,6 +118,6 @@ model Review {
   comment   String
   createdAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id])
-  listing Listing @relation(fields: [listingId], references: [id])
+  user    User    @relation(fields: [userId], references: [id],onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id],onDelete: Cascade)
 }

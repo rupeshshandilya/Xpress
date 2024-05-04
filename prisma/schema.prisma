@@ -25,7 +25,7 @@ model User {
   isVerified         Boolean?         @default(false)
   image              String?
   hashedPassword     String?
-  phoneNumber        Int          @unique
+  phoneNumber        String          @unique
   aadhaar            String?
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt

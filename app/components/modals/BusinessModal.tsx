@@ -307,6 +307,7 @@ const BusinessModal = () => {
           register={register}
           errors={errors}
           required
+          type="number"
           accept=".jpg, .jpeg, .png"
         />
         <h1>Front Image of Aadhaar</h1>

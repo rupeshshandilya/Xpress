@@ -78,11 +78,11 @@ const ListingCard: React.FC<ListingCardProps> = ({
             <HeartButton listingId={data.id} currentUser={currentUser} />
           </div>
         </div>
-        <div className=" font-semibold text-lg">
-          {reservationDate || data.category}  {(currentUser?.id != data.userId && reservation?.totalPrice) && otp}
-        </div>
-        <div className="font-semibold text-neutral-500">
+        <div className="font-semibold text-lg text-black-500">
           {data.title}
+        </div>
+        <div className=" font-semibold text-sm text-neutral-500">
+          {reservationDate || data.category}  {(currentUser?.id != data.userId && reservation?.totalPrice) && otp}
         </div>
         {onAction && actionLabel && (
           <Button

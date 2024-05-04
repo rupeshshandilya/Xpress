@@ -70,8 +70,9 @@ const RegisterModal = () => {
         disabled={isLoading}
         register={register}
         required
-        errors={errors}
-        pattern="[7-9]{1}[0-9]{9}" 
+        type='number'
+        errors={errors} 
+        maxLength={10}
       />
       <Input
         type="email"

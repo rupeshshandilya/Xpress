@@ -85,9 +85,11 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
             <div>Owner {user?.name}</div>
             <Avatar src={user?.image} />
           </div>
+          <div>
             <Link href={address}>
               Click to get Address
             </Link>
+          </div>
           <div
             className="
           

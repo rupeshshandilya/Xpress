@@ -14,6 +14,7 @@ interface InputProps {
   errors: FieldErrors;
   pattern?: string;
   accept?: string
+  maxLength?: number;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -26,7 +27,8 @@ const Input: React.FC<InputProps> = ({
   required,
   errors,
   pattern = "",
-  accept = ""
+  accept = "",
+  maxLength,
 }) => {
   return (
     <div className="w-full relative">
@@ -75,6 +77,7 @@ const Input: React.FC<InputProps> = ({
           ${errors[id] ? "border-rose-500" : "border-neutral-300"}
           ${errors[id] ? "focus:border-rose-500" : "focus:border-black"}
         `}
+        maxLength={maxLength}
       />
       <label
         className={`

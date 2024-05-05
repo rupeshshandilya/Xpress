@@ -32,6 +32,7 @@ export async function POST(request: Request) {
       hashedPassword,
       phoneNumber,
       role,
+      isVerified: false,
     },
   });
 

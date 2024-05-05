@@ -10,6 +10,7 @@ import BusinessModal from './components/modals/BusinessModal';
 import SearchModal from './components/modals/SearchModal';
 import Script from "next/script";
 import Footer from './components/Footer';
+import { useContext } from 'react';
 const inter = Figtree({ subsets: ['latin'] });
 
 export const metadata = {

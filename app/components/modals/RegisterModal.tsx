@@ -37,7 +37,7 @@ const RegisterModal = () => {
       .post('/api/register', data)
       .then(() => {
         registerModal.onClose();
-        toast.success('Account created.Please log in to get started. Enjoy! ');
+        toast.success('Please Verify Mail! ');
       })
       .catch((error) => toast.error('Something went wrong'))
       .finally(() => setisLoading(false));

@@ -12,6 +12,7 @@ import { SafeUser } from "@/app/types";
 import MenuBox from "./MenuBox";
 import Avatar from "../Avatar";
 import useSetupBusiness from "@/app/hooks/useSetupBusiness";
+import Link from "next/link";
 
 interface UserMenuProps {
   currentUser?: SafeUser | null;
@@ -56,12 +57,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
-        <div
-          onClick={() => router.push("/")}
+        <Link
+          href={"/"}
           className="cursor-pointer text-sm font-semibold hover:text-white"
         >
           Home
-        </div>
+        </Link>
         {currentUser?.role == "ADMIN" && (
           <div
             onClick={() => router.push("/admin")}
@@ -70,12 +71,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
             Admin
           </div>
         )}
-        <div
-          onClick={() => router.push("/about")}
+        <Link
+         href={"/about"}
           className="cursor-pointer text-sm font-semibold hover:text-white"
         >
           About
-        </div>
+        </Link>
         <div
           onClick={onRent}
           className="

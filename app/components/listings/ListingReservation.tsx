@@ -62,6 +62,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
 
 
   let nextDay = addHours(addDays(new Date().setMinutes(0), 0), 2);
+
   let test = new Date();
   if (test.getHours() > 19) {
     nextDay = addHours(nextDay, 24 - test.getHours() + 8);
@@ -84,11 +85,16 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         <div key={index} className="feature grid grid-cols-3 py-2 ">
           <h1 className="text-lg font-semibold px-2 italic capitalize" > {feature.service}</h1>
           <div className="">₹{feature.price}</div>
-          <button className="text-red-400" onClick={() => removeFeature(index)}>
+          <button className="bg-black text-white relative bottom-14 right-3 px-2 py-2 text-sm rounded-xl mt-10 hover:bg-black/20" onClick={() => removeFeature(index)}>
             Cancel
           </button>
-          <button onClick={() => setIndex(index)} className=" text-sm sm:text-base">
+          <div className="text-sm sm:text-base relative bottom-4 left-2">
             {selectedTimeFeature[index]?.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+          </div>
+          <button
+          className="bg-black text-white relative left-24 sm:left-40 bottom-5 px-2 py-2 text-sm rounded-xl hover:bg-black/20" 
+          onClick={() => setIndex(index)}>
+            Select Slot
           </button>
         </div>
       ))}

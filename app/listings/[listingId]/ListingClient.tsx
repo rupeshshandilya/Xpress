@@ -51,9 +51,10 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const router = useRouter();
 
   const tomorrow = new Date();
-  if (new Date().getHours() > 8) {
-    tomorrow.setDate(tomorrow.getDate() + 1);
-  }
+  // if (new Date().getHours() > 8) {
+  //   tomorrow.setDate(tomorrow.getDate() + 1);
+  // }
+  
 
   const [selectedDate, setSelectedDate] = useState<Date>(tomorrow);
   const [selectedTime, setSelectedTime] = useState(new Date());
@@ -101,6 +102,9 @@ const ListingClient: React.FC<ListingClientProps> = ({
   });
   const [selectedTimeFeature, setSelectedTimeFeature] =
     useState(freeTimes);
+
+    console.log(selectedDate);
+    
 
 
 

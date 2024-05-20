@@ -55,6 +55,6 @@ export async function POST(req) {
         }
     };
 
-   //const order = await instance.orders.create(options);
+   const order = await instance.orders.create(options);
   return NextResponse.json({ msg: "success",order});
 }

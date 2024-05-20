@@ -4,7 +4,6 @@ import getListingbyID from '@/app/actions/getListingbyID';
 import EmptyState from '@/app/components/EmptyState';
 import ListingClient from './ListingClient';
 import getReservations from '@/app/actions/getReservations';
-import { getPaymentHistorySum } from '../../actions/getPaymentHistorySum';
 
 interface Iparams {
   listingId?: string;
@@ -14,8 +13,7 @@ const ListingPage = async ({ params }: { params: Iparams }) => {
   const listing = await getListingbyID(params);
   const currentUser = await getCurrentUser();
   const reserved = await getReservations(params);
-  const totalRevenue =await getPaymentHistorySum(params.listingId || '');
-  console.log("TR is ",totalRevenue)
+
   if (!listing) {
     return (
       <ClientOnly>

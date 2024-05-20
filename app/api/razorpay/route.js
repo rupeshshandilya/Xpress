@@ -28,11 +28,6 @@ export async function GET() {
     };
 
    const order = await instance.orders.create(options);
-  return NextResponse.json({ msg: "success",order,headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  } });
 }
 
 
@@ -55,6 +50,6 @@ export async function POST(req) {
         }
     };
 
-   //const order = await instance.orders.create(options);
+  const order = await instance.orders.create(options);
   return NextResponse.json({ msg: "success",order});
 }

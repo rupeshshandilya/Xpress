@@ -15,7 +15,7 @@ const PaymentHistory = ({ history }: { history: any[] }) => {
 
   const handleClearDueAmount = async (listingId: string) => {
     try {
-      const response = await fetch('http://localhost:3000/api/cleardueamount', {
+      const response = await fetch('https://book.thexpresssalon.com/api/cleardueamount', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

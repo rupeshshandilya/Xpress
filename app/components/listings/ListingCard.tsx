@@ -16,6 +16,8 @@ interface ListingCardProps {
   actionLabel?: string;
   actionId?: string;
   currentUser?: SafeUser | null;
+  revenueMap?:{ [key: string]: number };
+  dueAmountMap?:{ [key: string]: number };
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
@@ -26,9 +28,11 @@ const ListingCard: React.FC<ListingCardProps> = ({
   actionId = '',
   actionLabel,
   currentUser,
+  revenueMap,
+  dueAmountMap
 }) => {
   const router = useRouter();
-
+  console.log("hi ",revenueMap)
   const handleCancel = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
@@ -63,6 +67,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
     }
   }, [reservation]);
   return (
+    
     <div onClick={() => router.push(`/listings/${data.id}`)}
       className="col-span-1 cursor-pointer group"
     >
@@ -81,6 +86,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
         <div className="font-semibold text-lg text-black-500">
           {data.title}
         </div>
+        <div className="font-semibold text-lg text-black-500">
+        {revenueMap && revenueMap.hasOwnProperty(data.id) ? revenueMap[data.id] : null}
+        </div>
+        <div className="font-semibold text-lg text-black-500">
+        {dueAmountMap && dueAmountMap.hasOwnProperty(data.id) ? dueAmountMap[data.id] : null}
+        </div>
+        
         <div className=" font-semibold text-sm text-neutral-500">
           {reservationDate || data.category}  {(currentUser?.id != data.userId && reservation?.totalPrice) && otp}
         </div>

@@ -65,6 +65,7 @@ export const sendEmail = async ({
     const mailResponse = await transport.sendMail(mailOptios);
     return mailResponse
   } catch (error: any) {
+    console.log("Error is ",error.message)
     throw new Error(error.message);
   }
 };

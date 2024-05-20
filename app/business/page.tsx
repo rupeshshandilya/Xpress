@@ -4,10 +4,12 @@ import ClientOnly from '../ClientOnly';
 import getCurrentUser from '@/app/actions/getCurrentUser';
 import BusinessClient from './BusinessClient';
 import getListings from '../actions/getListings';
+import { getPaymentHistorySum } from '../actions/getPaymentHistorySum';
+import { getDuePaymentSum } from '../actions/getDuePaymentSum';
 
 const Business = async () => {
   const currentUser = await getCurrentUser();
-
+   
   if (!currentUser) {
     return (
       <ClientOnly>
@@ -17,7 +19,7 @@ const Business = async () => {
   }
 
   const listings = await getListings({ userId: currentUser.id });
-
+    
   if (listings.length === 0) {
     return (
       <ClientOnly>
@@ -26,9 +28,25 @@ const Business = async () => {
     );
   }
 
+  const revenueMap: { [key: string]: number } = {};
+  const dueAmountMap: { [key: string]: number } = {};
+
+  await Promise.all(listings.map(async (listing: any) => {
+    const totalRevenue = await getPaymentHistorySum(listing.id);
+    revenueMap[listing.id]=totalRevenue ? Number(totalRevenue):0;
+  }));
+
+  await Promise.all(listings.map(async (listing: any) => {
+    const totalRevenue = await getDuePaymentSum(listing.id);
+    dueAmountMap[listing.id]=totalRevenue ? Number(totalRevenue):0;
+  }));
+  
+  console.log("rev ",revenueMap) 
+
+  
   return (
     <ClientOnly>
-      <BusinessClient listings={listings} currentUser={currentUser} />
+      <BusinessClient listings={listings} currentUser={currentUser} revenueMap={revenueMap} dueAmountMap={dueAmountMap}/>
     </ClientOnly>
   );
 };

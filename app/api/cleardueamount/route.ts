@@ -1,37 +1,35 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb";
+
 interface Props {
   listingId: string;
-  price: string;
-  title: string;
-  category: string;
 }
+
 export async function POST(request: Request) {
   const currentUser = await getCurrentUser();
   const body: unknown = await request.json();
-  const { listingId, price, title, category } = body as Props;
+  const { listingId } = body as Props;
+
   if (!currentUser) {
     return NextResponse.error();
   }
+
   if (!listingId || typeof listingId !== "string") {
-    throw new Error("Invalid ID");
+    throw new Error("Invalid listingId");
   }
-  const payment: unknown = await prisma?.paymentHistory.create({
-    data: {
-      listingId,
-      amount: parseInt(price?.toString()),
-      dueAmount:parseInt(price?.toString()),
-      userId: currentUser.id,
-      title,
-      category,
-    },
+
+  const payment = await prisma.paymentHistory.updateMany({
+    where: { listingId: listingId },
+    data: { dueAmount: 0 },
   });
+
   if (!payment) {
     return NextResponse.error();
   }
+
   return NextResponse.json({
     status: 200,
-    message: "payment history saved",
+    message: "Due amount set to 0 for listingId: " + listingId,
   });
 }

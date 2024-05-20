@@ -1,4 +1,28 @@
+// app/(group)/page.tsx
 import { getPaymentHistory } from "@/app/actions/getpaymenthistory";
+import EmptyState from "@/app/components/EmptyState";
+import PaymentHistory from "./paymentHistory";
+
+const PaymentHistoryPage = async () => {
+  const history = await getPaymentHistory();
+  //console.log("His is ",history)
+  if (!history || history.length === 0) {
+    return (
+      <div>
+        <EmptyState title="No payment history to show" />
+      </div>
+    );
+  }
+
+  return <PaymentHistory history={history} />;
+};
+
+export default PaymentHistoryPage;
+
+
+
+
+/* import { getPaymentHistory } from "@/app/actions/getpaymenthistory";
 import EmptyState from "@/app/components/EmptyState";
 import React, { useEffect } from "react";
 
@@ -52,4 +76,4 @@ const PaymentHistory = async () => {
   );
 };
 
-export default PaymentHistory;
+export default PaymentHistory; */

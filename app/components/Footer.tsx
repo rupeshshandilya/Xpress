@@ -9,8 +9,8 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-800 text-white p-8">
-      <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center">
-        <div className="flex items-center mb-6 md:mb-0">
+      <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-start gap-8">
+        <div className="flex items-center mb-6 md:mb-0 mx-auto">
           <Image
             src="/images/companylogo.png"
             height="200"
@@ -18,7 +18,7 @@ const Footer = () => {
             alt="Logo"
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col justify-between">
           {/* <span className="font-bold text-xl mb-2">Loveland, CO</span> */}
           <address className="not-italic">
           128, SAIMPAL, Kalanaur, Rohtak, <br />

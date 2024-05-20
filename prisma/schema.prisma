@@ -104,6 +104,7 @@ model PaymentHistory {
   userId    String   @db.ObjectId
   listingId String   @db.ObjectId
   amount    Int
+  dueAmount Int
   createdAt DateTime @default(now())
   title     String
   category  String

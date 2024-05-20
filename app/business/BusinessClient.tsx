@@ -14,11 +14,15 @@ import ListingCard from '@/app/components/listings/ListingCard';
 interface BusinessClientProps {
   listings: SafeListing[];
   currentUser?: SafeUser | null;
+  revenueMap:{ [key: string]: number };
+  dueAmountMap:{ [key: string]: number };
 }
 
 const BusinessClient: React.FC<BusinessClientProps> = ({
   listings,
   currentUser,
+  revenueMap,
+  dueAmountMap,
 }) => {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState('');
@@ -69,6 +73,8 @@ const BusinessClient: React.FC<BusinessClientProps> = ({
               disabled={deletingId === listing.id}
               actionLabel="Delete service"
               currentUser={currentUser}
+              revenueMap={revenueMap}
+              dueAmountMap={dueAmountMap}
             />
           ))}
         </div>

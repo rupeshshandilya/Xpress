@@ -15,7 +15,7 @@ const PaymentHistory = ({ history }: { history: any[] }) => {
 
   const handleClearDueAmount = async (listingId: string) => {
     try {
-      const response = await fetch('https://book.thexpresssalon.com/api/cleardueamount', {
+      const response = await fetch('http://localhost:3000/api/cleardueamount', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,27 +49,48 @@ const PaymentHistory = ({ history }: { history: any[] }) => {
               <th className="text-left font-semibold text-gray-900 py-2 px-3">S.no</th>
               <th className="text-left font-semibold text-gray-900 py-2 px-3">Title</th>
               <th className="text-left font-semibold text-gray-900 py-2 px-3">Amount</th>
+              <th className="text-left font-semibold text-gray-900 py-2 px-3">Due Amount</th>
+              <th className="text-left font-semibold text-gray-900 py-2 px-3">Clear Due Amount</th>
               {/* <th className="text-left font-semibold text-gray-900 py-2 px-3">Created AT</th> */}
               {/* <th className="sr-only">Edit</th> */}
             </tr>
           </thead>
 
           <tbody>
-            {history.map((item, index) => (
-              <tr key={item.id} className="border-b last:border-b-0" onClick={() => router.push(`/admin/paymenthistory/${item.listingId}`)}>
-                <td className="py-4 px-3 text-sm text-gray-900">{index + 1}</td>
-                <td className="py-4 px-3 text-sm text-gray-500">{item.title}</td>
-                <td className="py-4 px-3 text-sm text-gray-500">{item.amount}</td>
-                <td className="py-4 px-3 text-sm text-gray-500">
-                <Button sx={{ backgroundColor: "red", color: "white","&:hover": {
-      backgroundColor: "red", 
-      color: "white", 
-      cursor: "pointer", 
-    }, }} onClick={() => handleClearDueAmount(item.listingId)}>Clear</Button>
-               </td>
-              </tr>
-            ))}
-          </tbody>
+  {history.map((item, index) => (
+    <tr
+      key={item.id}
+      className="border-b last:border-b-0"
+      onClick={() => router.push(`/admin/paymenthistory/${item.listingId}`)}
+    >
+      <td className="py-4 px-3 text-sm text-gray-900">{index + 1}</td>
+      <td className="py-4 px-3 text-sm text-gray-500">{item.title}</td>
+      <td className="py-4 px-3 text-sm text-gray-500">{item.amount}</td>
+      <td className="py-4 px-3 text-sm text-gray-500">{item.dueAmount}</td>
+      <td className="py-4 px-3 text-sm text-gray-500">
+        <Button
+          sx={{
+            backgroundColor: "red",
+            color: "white",
+            "&:hover": {
+              backgroundColor: "red",
+              color: "white",
+              cursor: "pointer",
+            },
+          }}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevents the row click event
+            handleClearDueAmount(item.listingId);
+            router.refresh()
+          }}
+        >
+          Clear
+        </Button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
         </table>
       </div>
       <hr/>

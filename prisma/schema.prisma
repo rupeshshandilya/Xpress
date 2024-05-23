@@ -103,8 +103,8 @@ model PaymentHistory {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   userId    String   @db.ObjectId
   listingId String   @db.ObjectId
-  amount    Int
-  dueAmount Int
+  amount    Float
+  dueAmount Float
   createdAt DateTime @default(now())
   title     String
   category  String

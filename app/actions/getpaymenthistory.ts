@@ -6,6 +6,7 @@ export async function getPaymentHistory() {
       by: ['listingId', 'title'], // Include both listingId and title
       _sum: {
         amount: true,
+        dueAmount:true,
       },
     });
   
@@ -13,10 +14,10 @@ export async function getPaymentHistory() {
       // Restructure the response to match the desired format
       const formattedResponse = res.map((item: any) => ({
         amount: item._sum.amount,
+        dueAmount:(item._sum.dueAmount*0.92).toFixed(2),
         listingId: item.listingId,
         title: item.title,
       }));
-  
       return formattedResponse;
     } else {
       console.log("Something went wrong");

@@ -70,7 +70,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
     nextDay = addHours(nextDay, 8 - test.getHours());
   }
 
-  const taxRate = 0.08;
+  const taxRate = 0.05;
   const total = features.reduce(
     (previous, current) => previous + current.price,
     0
@@ -124,7 +124,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
             </div>
           ))}
           <div className="grid grid-cols-3">
-            <div>Tax(8%)</div>
+            <div>Convenience Fee</div>
             <div>₹{taxPrice.toFixed(2)}</div>
           </div>
         </div>

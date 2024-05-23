@@ -53,7 +53,7 @@ const Admin = async ({ searchParams }: Props) => {
                       </th>
                       <th
                         scope="col"
-                        className="sticky top-0 -z-10 hidden border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
+                        className="sticky top-0 -z-10  border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
                       >
                         Title
                       </th>
@@ -83,7 +83,7 @@ const Admin = async ({ searchParams }: Props) => {
                             Idx !== listings.length - 1
                               ? "border-b border-gray-200"
                               : "",
-                            "whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
+                            "whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:table-cell"
                           )}
                         >
                           {item.title}

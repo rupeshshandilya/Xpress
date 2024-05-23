@@ -1,69 +1,43 @@
-import nodemailer from "nodemailer";
 import prisma from "../libs/prismadb";
-import bcryptjs from "bcryptjs";
+import { SMTPClient } from 'emailjs';
+import bcrypt from "bcrypt";
 
-type EmailType = "VERIFY" | "RESET";
+const client = new SMTPClient({
+  user: process.env.SMTP_MAIL,
+  password: process.env.SMTP_PASSWORD,
+  host: process.env.SMTP_HOST,
+  ssl: true,
+});
 
 interface sendEmailParams {
   email: string;
-  emailType: EmailType;
   userId: string;
 }
 
-export const sendEmail = async ({
-  email,
-  emailType,
-  userId,
-}: sendEmailParams) => {
+export const sendMail = async ({ email, userId }: sendEmailParams) => {
+  const hashedToken = await bcrypt.hash(userId, 10);
+  const updateData = {
+    verifyToken: hashedToken,
+    verifyTokenExpiry: new Date(Date.now() + 3600000), // 1 hour from now
+  };
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: updateData,
+  });
+
+  const message = {
+    text: `Click the following link to verify your email: ${process.env.NEXT_PUBLIC_BASE_URL}/verifyemail?token=${hashedToken}`,
+    from: "thexpresssalon@gmail.com",
+    to: email,
+    subject: "Verify Your Email",
+  };
+
   try {
-    const hashedToken = await bcryptjs.hash(userId, 10);
-    let updateData = {};
-
-    if (emailType === "VERIFY") {
-      updateData = {
-        verifyToken: hashedToken,
-        // 1 hour from now
-        verifyTokenExpiry: new Date(Date.now() + 3600000),
-      };
-    } 
-    // else {
-    //   if (emailType === "RESET") {
-    //     updateData = {
-    //       forgetPasswordToken: hashedToken,
-    //       // 1 hour from now
-    //       forgetPasswordTokenExpiry: new Date(Date.now() + 3600000),
-    //     };
-    //   }
-    // }
-
-    await prisma.user.update({
-      where: { id: userId },
-      data: updateData,
-    });
-
-    //transporter for sending email
-    const transport = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      service: 'gmail',
-      auth: {
-        user: process.env.SMTP_MAIL,
-        pass: process.env.SMTP_PASSWORD
-      }
-    });
-
-    const mailOptios = {
-        from: "support@thexpresssalon.com",
-        to: email,
-        subject: emailType === 'VERIFY' ? "Verify your mail" : "Reset your password",
-        html: `<p>Click <a href="${process.env.NEXT_PUBLIC_BASE_URL}/verifyemail?token=${hashedToken}">here</a> to ${emailType === 'VERIFY' ? 'verify your email' : 'reset your password'}
-        or copy and paste the link below in your browser. <br> ${process.env.NEXT_PUBLIC_BASE_URL}/verifyemail?token=${hashedToken}
-        </p>` 
-    }
-    const mailResponse = await transport.sendMail(mailOptios);
-    return mailResponse
-  } catch (error: any) {
-    
-    throw new Error(error.message);
+    await client.sendAsync(message);
+    console.log('Email sent successfully');
+  } catch (error) {
+    console.error('Failed to send email:', error);
+    throw error; // Rethrow to handle it further up the chain
   }
 };

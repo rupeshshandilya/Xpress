@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-
 import prisma from "@/app/libs/prismadb";
-import { sendEmail } from "@/app/helpers/mailer";
+import { sendMail } from "@/app/helpers/mailer";
 
 
 export async function POST(request: Request) {
@@ -47,8 +46,7 @@ export async function POST(request: Request) {
     
 
     // Send verification email
-    await sendEmail({ email, emailType: "VERIFY", userId: user.id });
-
+    await sendMail({ email, userId: user.id });
     return NextResponse.json(user);
   } catch (error: any) {
     console.log("Error occurred:", error.message);

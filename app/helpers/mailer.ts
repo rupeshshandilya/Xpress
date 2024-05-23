@@ -17,7 +17,6 @@ export const sendEmail = async ({
 }: sendEmailParams) => {
   try {
     const hashedToken = await bcryptjs.hash(userId, 10);
-
     let updateData = {};
 
     if (emailType === "VERIFY") {
@@ -61,11 +60,10 @@ export const sendEmail = async ({
         or copy and paste the link below in your browser. <br> ${process.env.NEXT_PUBLIC_BASE_URL}/verifyemail?token=${hashedToken}
         </p>` 
     }
-
     const mailResponse = await transport.sendMail(mailOptios);
     return mailResponse
   } catch (error: any) {
-    console.log("Error is ",error.message)
+    
     throw new Error(error.message);
   }
 };

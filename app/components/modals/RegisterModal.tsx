@@ -39,7 +39,8 @@ const RegisterModal = () => {
         registerModal.onClose();
         toast.success('Please Verify Mail! ');
       })
-      .catch((error) => toast.error('Something went wrong'))
+      .catch((error) => { const errorMessage = error.response?.data?.error || 'Something went wrong';
+      toast.error(errorMessage)})
       .finally(() => setisLoading(false));
   };
 

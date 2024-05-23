@@ -124,7 +124,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   }, [reserved]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const taxRate = 0.02;
+  const taxRate = 0.08;
   const taxPrice = listing.price * taxRate;
   const total = (listing?.price + taxPrice).toFixed(2);
   const [totalPrice, setTotalPrice] = useState(listing.price);
@@ -135,8 +135,6 @@ const ListingClient: React.FC<ListingClientProps> = ({
       price: feature.price,
     }))
   );
-
-  //selectedTime
 
   const [offTimes, setOffTime] = useState(listing.offTime.length == 0 ? [] : listing.offTime);
   const removeOffTime = (t: string) => {
@@ -165,7 +163,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   };
   const applyOfftime = () => {
     axios
-      .patch(`https://book.thexpresssalon.com/api/listings/${listing.id}`, {
+      .patch(`http://localhost:3000/api/listings/${listing.id}`, {
         offTime: offTimes,
         features: editFeatures,
       })
@@ -263,17 +261,17 @@ const onCreateReservation = useCallback(async() => {
     }
     setIsLoading(true);
     const makePayment = async () => {
+      console.log(`totalPriceAfterTax: ${totalPriceAfterTax}`);
+      
       try {
         const key = process.env.RAZORPAY_API_KEY;
-        const data = await fetch("https://book.thexpresssalon.com/api/razorpay", {
+        const data = await fetch("http://localhost:3000/api/razorpay", {
           method: "POST",
           body: JSON.stringify({
-            totalPriceAfterTaxid: parseInt(totalPriceAfterTax),
+            totalPriceAfterTaxid: parseFloat(totalPriceAfterTax),
           }),
         });
-        console.log(data);
         const { order } = await data.json();
-        console.log(order.id);
         const options = {
           key: key as string,
           name: "Xpress",
@@ -289,7 +287,7 @@ const onCreateReservation = useCallback(async() => {
           }) {
             console.log("HERE" + response);
             const data = await fetch(
-              "https://book.thexpresssalon.com/api/paymentverify",
+              "http://localhost:3000/api/paymentverify",
               {
                 method: "POST",
                 body: JSON.stringify({
@@ -305,7 +303,7 @@ const onCreateReservation = useCallback(async() => {
             console.log("response verify==", res);
 
             if (res?.message == "success") {
-              fetch("https://book.thexpresssalon.com/api/paymentregister", {
+              fetch("http://localhost:3000/api/paymentregister", {
                 method: "POST",
                 body: JSON.stringify({
                   listingId: listing?.id,
@@ -319,7 +317,7 @@ const onCreateReservation = useCallback(async() => {
                     const saveRes = async() =>{
 
                       await axios
-                      .post("https://book.thexpresssalon.com/api/reservations", {
+                      .post("http://localhost:3000/api/reservations", {
                         totalPrice: parseInt(totalPriceAfterTax),
                         startDate: selectedTimeFeature,
                         startTime: selectedTimeFeature,
@@ -341,7 +339,7 @@ const onCreateReservation = useCallback(async() => {
               setDateRange(initialDateRange);
               router.refresh();
               const res = await fetch(
-                "https://book.thexpresssalon.com/api/paymentregister",
+                "http://localhost:3000/api/paymentregister",
                 {
                   method: "POST",
                   body: JSON.stringify({

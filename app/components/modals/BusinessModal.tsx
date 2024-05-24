@@ -251,7 +251,7 @@ const BusinessModal = () => {
       })
       .then(() => {
         // addAadhaar(data.aadhaar);
-        toast.success("Listing created!");
+        toast.success("Wait for Approval!");
         router.refresh();
         reset();
         setStep(STEPS.CATEGORY);

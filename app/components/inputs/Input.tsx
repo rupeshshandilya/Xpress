@@ -13,8 +13,9 @@ interface InputProps {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
   pattern?: string;
-  accept?: string
+  accept?: string;
   maxLength?: number;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -29,6 +30,7 @@ const Input: React.FC<InputProps> = ({
   pattern = "",
   accept = "",
   maxLength,
+  onChange,
 }) => {
   return (
     <div className="w-full relative">
@@ -78,6 +80,7 @@ const Input: React.FC<InputProps> = ({
           ${errors[id] ? "focus:border-rose-500" : "focus:border-black"}
         `}
         maxLength={maxLength}
+        onChange={onChange}
       />
       <label
         className={`

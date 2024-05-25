@@ -51,7 +51,12 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const router = useRouter();
 
   const tomorrow = new Date();
-  if (new Date().getHours() > 8) {
+
+  let currentTime = new Date().getHours();
+  currentTime = currentTime % 12 || 12;
+  
+  
+  if (currentTime > 8) {
     tomorrow.setDate(tomorrow.getDate() + 1);
   }
   

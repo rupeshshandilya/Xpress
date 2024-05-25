@@ -20,7 +20,7 @@ enum STEPS {
 
   AADHAAR = 1,
   INFO = 2,
-  ADDRESS=3,
+  ADDRESS = 3,
   IMAGES = 4,
   DESCRIPTION = 5,
   PRICE = 6,
@@ -28,11 +28,8 @@ enum STEPS {
 
 const BusinessModal = () => {
   const [features, setFeatures] = useState<Feature[]>([]);
-  // const [aadhaar, setAadhaar] = useState({
-  //   number: "",
-  //   aadhaarFront: undefined,
-  //   aadhaarBack: undefined,
-  // });
+
+  const [isAadhaarValid, setIsAadhaarValid] = useState(false);
 
   const [isAadhaar, setisAadhaar] = useState(false);
   const [aadhaarImgFront, setAadhaarImgFront] = useState<File | null>(null);
@@ -97,7 +94,7 @@ const BusinessModal = () => {
         reader.readAsDataURL(file);
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
   // const handleAadhaar = async (e: any) => {
@@ -129,7 +126,11 @@ const BusinessModal = () => {
   //   addAadhaar(res);
   // };
 
-  const addAadhaar = async (aadhaarinfo: { aadhaar: string, aadhaarFrontImg: string, aadhaarBackImg: string }) => {
+  const addAadhaar = async (aadhaarinfo: {
+    aadhaar: string;
+    aadhaarFrontImg: string;
+    aadhaarBackImg: string;
+  }) => {
     try {
       setIsLoading(true);
       const { data } = await axios.patch("/api/addaadhaar", {
@@ -178,7 +179,7 @@ const BusinessModal = () => {
       imageSrc: "",
       price: 1,
       title: "",
-      address:"",
+      address: "",
       aadhaarFrontImg: "",
       aadhaarBackImg: "",
       description: "",
@@ -187,6 +188,16 @@ const BusinessModal = () => {
   });
   const category = watch("category");
   const imageSrc = watch("imageSrc");
+
+  function isValid_Aadhaar_Number(aadhaar_number: any) {
+    // Regex to check valid
+    // aadhaar_number
+    let regex = new RegExp(/^[2-9]{1}[0-9]{3}\s[0-9]{4}\s[0-9]{4}$/);
+
+    // if aadhaar_number
+    // is empty return false
+    return aadhaar_number != null && regex.test(aadhaar_number);
+  }
 
   const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
@@ -199,6 +210,10 @@ const BusinessModal = () => {
     setStep((value) => value - 1);
   };
   const onNext = () => {
+    if (step === STEPS.AADHAAR && !isAadhaarValid) {
+      toast.error("Please enter a valid Aadhaar number to proceed.");
+      return;
+    }
     setStep((value) => value + 1);
   };
 
@@ -226,12 +241,22 @@ const BusinessModal = () => {
     return "Back";
   }, [step]);
 
+  const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const aadhaarValue = e.target.value;
+    setValue("aadhaar", aadhaarValue, { shouldValidate: true });
+    const valid = isValid_Aadhaar_Number(aadhaarValue);
+    setIsAadhaarValid(valid);
+    if (!valid) {
+      toast.error("Invalid Aadhaar number format.");
+    }
+  };
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (step !== STEPS.PRICE) {
       return onNext();
     }
 
-    const { aadhaar, aadhaarFrontImg, aadhaarBackImg } = data
+    const { aadhaar, aadhaarFrontImg, aadhaarBackImg } = data;
     if (aadhaar || aadhaarFrontImg || aadhaarBackImg) {
       const frontImageBase64 = await convertImageToBase64(
         aadhaarFrontImg[0] as File
@@ -239,15 +264,20 @@ const BusinessModal = () => {
       const backImageBase64 = await convertImageToBase64(
         aadhaarBackImg[0] as File
       );
-      await addAadhaar({ aadhaar, aadhaarBackImg: backImageBase64 as string, aadhaarFrontImg: frontImageBase64 as string })
+      await addAadhaar({
+        aadhaar,
+        aadhaarBackImg: backImageBase64 as string,
+        aadhaarFrontImg: frontImageBase64 as string,
+      });
     }
 
     setIsLoading(true);
 
-
     axios
       .post("/api/listings", {
-        ...data, features, offTime,
+        ...data,
+        features,
+        offTime,
       })
       .then(() => {
         // addAadhaar(data.aadhaar);
@@ -259,6 +289,7 @@ const BusinessModal = () => {
       })
       .catch(() => {
         toast.error("Something went wrong.");
+        setIsLoading(false);
       })
       .finally(() => {
         setIsLoading(false);
@@ -297,18 +328,20 @@ const BusinessModal = () => {
       setStep(STEPS.INFO);
     }
     bodyContent = (
-      <div className="flex flex-col gap-4" >
+      <div className="flex flex-col gap-4">
         <Heading title="Required Aadhaar Number" />
-        {/* <input type="text" placeholder="Enter aadhaar number" name="aadhaar" required /> */}
+        <div>Give space wherever space present in the Aadhaar</div>
         <Input
           id="aadhaar"
           label="aadhaar"
           disabled={isLoading}
           register={register}
+          onChange={handleAadhaarChange}
           errors={errors}
           required
-          type="number"
+          type="text"
           accept=".jpg, .jpeg, .png"
+          maxLength={14}
         />
         <h1>Front Image of Aadhaar</h1>
         <Input
@@ -321,16 +354,15 @@ const BusinessModal = () => {
           required
         />
         <h1>Back Image of Aadhaar</h1>
-    
-          <Input
-            type="file"
-            id="aadhaarBackImg"
-            label="Aadhar Back Image (accept jpeg,png,jpg only)"
-            register={register}
-            errors={errors}
-            required
-          />
 
+        <Input
+          type="file"
+          id="aadhaarBackImg"
+          label="Aadhar Back Image (accept jpeg,png,jpg only)"
+          register={register}
+          errors={errors}
+          required
+        />
       </div>
     );
   }
@@ -515,6 +547,7 @@ const BusinessModal = () => {
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
       body={bodyContent}
+      disabled={isLoading}
     />
   );
 };

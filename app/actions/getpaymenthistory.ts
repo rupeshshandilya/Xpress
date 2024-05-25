@@ -14,7 +14,7 @@ export async function getPaymentHistory() {
       // Restructure the response to match the desired format
       const formattedResponse = res.map((item: any) => ({
         amount: item._sum.amount,
-        dueAmount:(item._sum.dueAmount*0.88).toFixed(2),
+        dueAmount:(item._sum.dueAmount*0.93).toFixed(2), // 7%
         listingId: item.listingId,
         title: item.title,
       }));

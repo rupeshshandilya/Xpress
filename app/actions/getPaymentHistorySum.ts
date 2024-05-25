@@ -13,7 +13,7 @@ export async function getPaymentHistorySum(listingId: string) {
 
     if (res && res._sum && res._sum.amount) {
       const totalRevenue = res._sum.amount;
-      const adjustedAmount = (totalRevenue * 0.88).toFixed(2); // Deduct 12%  from the total revenue
+      const adjustedAmount = (totalRevenue * 0.93).toFixed(2); // Deduct 7%  from the total revenue
       return adjustedAmount;
     } else {
       console.log("No payment history found for the listingId: ", listingId);

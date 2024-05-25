@@ -20,8 +20,8 @@ export async function POST(request: Request) {
   const payment: unknown = await prisma?.paymentHistory.create({
     data: {
       listingId,
-      amount: parseInt(price?.toString()),
-      dueAmount:parseInt(price?.toString()),
+      amount: parseFloat(price?.toString()),
+      dueAmount:parseFloat(price?.toString()),
       userId: currentUser.id,
       title,
       category,

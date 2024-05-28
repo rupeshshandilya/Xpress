@@ -14,6 +14,7 @@ import CategoryInput from "../inputs/CategoryInput";
 import ImageUpload from "../inputs/ImageUpload";
 import Input from "../inputs/Input";
 import { Feature } from "@prisma/client";
+import useDebounce from "@/app/hooks/useDebounce";
 
 enum STEPS {
   CATEGORY = 0,
@@ -29,7 +30,10 @@ enum STEPS {
 const BusinessModal = () => {
   const [features, setFeatures] = useState<Feature[]>([]);
 
+  const [aadhaar, setAadhaar] = useState("");
   const [isAadhaarValid, setIsAadhaarValid] = useState(false);
+
+  const debouncedAadhaar = useDebounce(aadhaar,500);
 
   const [isAadhaar, setisAadhaar] = useState(false);
   const [aadhaarImgFront, setAadhaarImgFront] = useState<File | null>(null);
@@ -241,14 +245,16 @@ const BusinessModal = () => {
     return "Back";
   }, [step]);
 
-  const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const aadhaarValue = e.target.value;
-    setValue("aadhaar", aadhaarValue, { shouldValidate: true });
-    const valid = isValid_Aadhaar_Number(aadhaarValue);
+  useEffect(()=>{
+    const valid = isValid_Aadhaar_Number(debouncedAadhaar);
     setIsAadhaarValid(valid);
-    if (!valid) {
+    if (!valid && debouncedAadhaar.length === 14) {
       toast.error("Invalid Aadhaar number format.");
     }
+  },[debouncedAadhaar])
+
+  const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAadhaar(e.target.value);
   };
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {

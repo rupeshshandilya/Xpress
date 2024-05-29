@@ -1,6 +1,6 @@
 "use client";
 import { Range } from "react-date-range";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { categories } from "@/app/components/navbar/Categories";
 import { SafeListing, SafeUser, SafeReservation } from "@/app/types";
 import ListingHead from "@/app/components/listings/ListingHead";
@@ -77,13 +77,13 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const StartOfToday = startOfDay(selectedDate);
   const endOfToday = endOfDay(selectedDate);
   const startHour = set(StartOfToday, { hours: newTime });
-  const endHour = set(endOfToday, { hours: 19, minutes: 45 });
+  const endHour = set(endOfToday, { hours: 21, minutes: 45 });
   let hoursInDay = eachMinuteOfInterval(
     {
       start: startHour,
       end: endHour,
     },
-    { step: 30 }
+    { step: 40 }
   );
   let today = startOfToday();
 
@@ -108,14 +108,8 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const [selectedTimeFeature, setSelectedTimeFeature] =
     useState(freeTimes);
 
-    console.log(selectedDate);
-    
-
-
-
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
-
   };
   const handleTimeSelect = (time: Date) => {
     setSelectedTime(time);

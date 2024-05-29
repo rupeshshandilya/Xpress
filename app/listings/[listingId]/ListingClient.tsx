@@ -57,7 +57,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   
   
   if (currentTime > 8) {
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setDate(tomorrow.getDate());
   }
   
 

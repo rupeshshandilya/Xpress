@@ -65,7 +65,7 @@ model Listing {
   description   String
   imageSrc      String
   createdAt     DateTime  @default(now())
-  category      String
+  category      String?
   time          String?
   address       String
   // locationValue String

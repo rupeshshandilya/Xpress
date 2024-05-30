@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -37,10 +38,10 @@ const Footer = () => {
 
         <div className="flex flex-col">
           <span className="font-bold text-xl mb-2">Our Services</span>
-          <a href="#" className="text-blue-300 hover:text-blue-500">
+          <Link href="/" className="text-blue-300 hover:text-blue-500">
             Salon
-          </a>
-          <a href="#" className="text-blue-300 hover:text-blue-500">
+          </Link>
+          {/* <a href="#" className="text-blue-300 hover:text-blue-500">
             Med Aesthetics
           </a>
           <a href="#" className="text-blue-300 hover:text-blue-500">
@@ -51,7 +52,7 @@ const Footer = () => {
           </a>
           <a href="#" className="text-blue-300 hover:text-blue-500">
             Nail Spa
-          </a>
+          </a> */}
         </div>
 
         <div className="flex flex-col">
@@ -90,9 +91,9 @@ const Footer = () => {
 
         <div className="flex flex-col">
           <span className="font-bold text-xl mb-2">Stay Updated</span>
-          <a href="#" className="text-blue-300 hover:text-blue-500">
+          {/* <a href="#" className="text-blue-300 hover:text-blue-500">
             Facebook
-          </a>
+          </a> */}
           <a href="https://www.instagram.com/thexpresssalon?igsh=MW1vb3E0Y3B2YzQzdg==" className="text-blue-300 hover:text-blue-500">
             Instagram
           </a>

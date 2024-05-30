@@ -28,7 +28,7 @@ const Footer = () => {
             Get Directions
           </a>
           <a
-            href="tel:970-669-4836"
+            href="tel:8199859921"
             className="text-blue-300 hover:text-blue-500"
           >
             Phone: +91 8199859921

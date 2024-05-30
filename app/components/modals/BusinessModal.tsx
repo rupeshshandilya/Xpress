@@ -367,6 +367,7 @@ const BusinessModal = () => {
           label="Aadhar Back Image (accept jpeg,png,jpg only)"
           register={register}
           errors={errors}
+          accept=".jpg, .jpeg, .png"
           required
         />
       </div>

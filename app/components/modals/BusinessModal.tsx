@@ -353,7 +353,6 @@ const BusinessModal = () => {
         <Input
           type="file"
           id="aadhaarFrontImg"
-          label="Aadhar Front Image (accept jpeg,png,jpg only)"
           register={register}
           errors={errors}
           accept=".jpg, .jpeg, .png"
@@ -364,7 +363,6 @@ const BusinessModal = () => {
         <Input
           type="file"
           id="aadhaarBackImg"
-          label="Aadhar Back Image (accept jpeg,png,jpg only)"
           register={register}
           errors={errors}
           accept=".jpg, .jpeg, .png"

@@ -167,7 +167,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   };
   const applyOfftime = () => {
     axios
-      .patch(`http://localhost:3000/api/listings/${listing.id}`, {
+      .patch(`https://book.thexpresssalon.com/api/listings/${listing.id}`, {
         offTime: offTimes,
         features: editFeatures,
       })
@@ -269,7 +269,7 @@ const onCreateReservation = useCallback(async() => {
       
       try {
         const key = process.env.RAZORPAY_API_KEY;
-        const data = await fetch("http://localhost:3000/api/razorpay", {
+        const data = await fetch("https://book.thexpresssalon.com/api/razorpay", {
           method: "POST",
           body: JSON.stringify({
             totalPriceAfterTaxid: parseFloat(totalPriceAfterTax),
@@ -291,7 +291,7 @@ const onCreateReservation = useCallback(async() => {
           }) {
             console.log("HERE" + response);
             const data = await fetch(
-              "http://localhost:3000/api/paymentverify",
+              "https://book.thexpresssalon.com/api/paymentverify",
               {
                 method: "POST",
                 body: JSON.stringify({
@@ -307,7 +307,7 @@ const onCreateReservation = useCallback(async() => {
             console.log("response verify==", res);
 
             if (res?.message == "success") {
-              fetch("http://localhost:3000/api/paymentregister", {
+              fetch("https://book.thexpresssalon.com/api/paymentregister", {
                 method: "POST",
                 body: JSON.stringify({
                   listingId: listing?.id,
@@ -321,7 +321,7 @@ const onCreateReservation = useCallback(async() => {
                     const saveRes = async() =>{
 
                       await axios
-                      .post("http://localhost:3000/api/reservations", {
+                      .post("https://book.thexpresssalon.com/api/reservations", {
                         totalPrice: parseInt(totalPriceAfterTax),
                         startDate: selectedTimeFeature,
                         startTime: selectedTimeFeature,
@@ -343,7 +343,7 @@ const onCreateReservation = useCallback(async() => {
               setDateRange(initialDateRange);
               router.refresh();
               const res = await fetch(
-                "http://localhost:3000/api/paymentregister",
+                "https://book.thexpresssalon.com/api/paymentregister",
                 {
                   method: "POST",
                   body: JSON.stringify({

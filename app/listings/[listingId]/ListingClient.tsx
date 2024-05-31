@@ -77,13 +77,13 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const StartOfToday = startOfDay(selectedDate);
   const endOfToday = endOfDay(selectedDate);
   const startHour = set(StartOfToday, { hours: newTime });
-  const endHour = set(endOfToday, { hours: 21, minutes: 45 });
+  const endHour = set(endOfToday, { hours: 21, minutes: 30 });
   let hoursInDay = eachMinuteOfInterval(
     {
       start: startHour,
       end: endHour,
     },
-    { step: 40 }
+    { step: 30 }
   );
   let today = startOfToday();
 

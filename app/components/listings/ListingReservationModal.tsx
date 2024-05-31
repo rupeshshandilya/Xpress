@@ -24,6 +24,7 @@ import {
   startOfWeek,
 } from "date-fns";
 import { Calendar } from "react-date-range";
+import toast from "react-hot-toast";
 
 interface ListingReservationModalProps {
   time: string;
@@ -37,6 +38,7 @@ interface ListingReservationModalProps {
   modalKey: number;
   setIndex: (index: number | null) => void;
   setSelectedTimeFeature: (value: any) => void;
+  selectedTimeFeature: Date[];
 }
 
 const ListingReservationModal: React.FC<ListingReservationModalProps> = ({
@@ -51,6 +53,7 @@ const ListingReservationModal: React.FC<ListingReservationModalProps> = ({
   modalKey,
   setIndex,
   setSelectedTimeFeature,
+  selectedTimeFeature,  // Make sure this is included
 }: ListingReservationModalProps) => {
 
   let nextDay = addHours(addDays(new Date().setMinutes(0), 0), 2);
@@ -123,7 +126,7 @@ const ListingReservationModal: React.FC<ListingReservationModalProps> = ({
     handleTimeSelect(time);
     setSelectedTimeFeature((prev: any) => {
       const temp = [...prev];
-      temp[modalKey] = time;
+      temp[modalKey] = selectedTime;
       return temp;
     });
   };

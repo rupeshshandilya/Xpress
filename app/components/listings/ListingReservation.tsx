@@ -112,6 +112,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
           modalKey={index}
           setIndex={setIndex}
           setSelectedTimeFeature={setSelectedTimeFeature}
+          selectedTimeFeature={selectedTimeFeature}
         />
       )}
       <hr />

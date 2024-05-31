@@ -126,7 +126,7 @@ const ListingReservationModal: React.FC<ListingReservationModalProps> = ({
     handleTimeSelect(time);
     setSelectedTimeFeature((prev: any) => {
       const temp = [...prev];
-      temp[modalKey] = selectedTime;
+      temp[modalKey] = time;
       return temp;
     });
   };

@@ -72,14 +72,15 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
           </div>
         )}
         <Link
-         href={"/about"}
+          href={"/about"}
           className="cursor-pointer text-sm font-semibold hover:text-white"
         >
           About
         </Link>
-        <div
-          onClick={onRent}
-          className="
+        {currentUser?.isSalonOwner === true && (
+          <div
+            onClick={onRent}
+            className="
             hidden
             md:block
             text-sm 
@@ -91,9 +92,10 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
             transition 
             cursor-pointer
           "
-        >
-          Your Bussiness
-        </div>
+          >
+            Your Bussiness
+          </div>
+        )}
         <div
           onClick={toggleOpen}
           className="
@@ -145,14 +147,18 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                   label="My favorites"
                   onClick={() => router.push("/favorites")}
                 />
-                <MenuBox
-                  label="My reservations"
-                  onClick={() => router.push("/reservations")}
-                />
-                <MenuBox
-                  label="My business"
-                  onClick={() => router.push("/business")}
-                />
+                {currentUser?.isSalonOwner == true && (
+                  <>
+                    <MenuBox
+                      label="My business"
+                      onClick={() => router.push("/business")}
+                    />
+                    <MenuBox
+                      label="My reservations"
+                      onClick={() => router.push("/reservations")}
+                    />
+                  </>
+                )}
                 <MenuBox
                   label="Create your business"
                   onClick={businessModal.onOpen}

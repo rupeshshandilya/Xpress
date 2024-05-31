@@ -1,6 +1,6 @@
 "use client";
 import { Range } from "react-date-range";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { categories } from "@/app/components/navbar/Categories";
 import { SafeListing, SafeUser, SafeReservation } from "@/app/types";
 import ListingHead from "@/app/components/listings/ListingHead";
@@ -56,8 +56,8 @@ const ListingClient: React.FC<ListingClientProps> = ({
   currentTime = currentTime % 12 || 12;
   
   
-  if (currentTime > 8) {
-    tomorrow.setDate(tomorrow.getDate() + 1);
+  if (new Date().getHours() > 20) {
+    tomorrow.setDate(tomorrow.getDate()+1);
   }
   
 
@@ -77,7 +77,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const StartOfToday = startOfDay(selectedDate);
   const endOfToday = endOfDay(selectedDate);
   const startHour = set(StartOfToday, { hours: newTime });
-  const endHour = set(endOfToday, { hours: 19, minutes: 45 });
+  const endHour = set(endOfToday, { hours: 21, minutes: 30 });
   let hoursInDay = eachMinuteOfInterval(
     {
       start: startHour,
@@ -105,17 +105,16 @@ const ListingClient: React.FC<ListingClientProps> = ({
       !reservedTimeDates.some(disabledDate => isSameMinute(new Date(disabledDate), hourISO)) &&
       hourISO > now; // Filter out past times
   });
+  console.log(`free times: ${freeTimes}`);
+  
   const [selectedTimeFeature, setSelectedTimeFeature] =
     useState(freeTimes);
 
-    console.log(selectedDate);
+    console.log(`free time: ${selectedTimeFeature}`);
     
-
-
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
-
   };
   const handleTimeSelect = (time: Date) => {
     setSelectedTime(time);

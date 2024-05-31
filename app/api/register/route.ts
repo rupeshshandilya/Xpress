@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     
 
     // Send verification email
-    await sendMail({ email, userId: user.id });
+    await sendMail({ email, userId: user.id, emailType: "VERIFY" });
     return NextResponse.json(user);
   } catch (error: any) {
     console.log("Error occurred:", error.message);

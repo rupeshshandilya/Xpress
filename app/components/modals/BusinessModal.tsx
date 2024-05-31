@@ -14,22 +14,26 @@ import CategoryInput from "../inputs/CategoryInput";
 import ImageUpload from "../inputs/ImageUpload";
 import Input from "../inputs/Input";
 import { Feature } from "@prisma/client";
+import useDebounce from "@/app/hooks/useDebounce";
 
 enum STEPS {
-  CATEGORY = 0,
+  // CATEGORY = 0,
 
   AADHAAR = 1,
   INFO = 2,
   ADDRESS = 3,
   IMAGES = 4,
-  DESCRIPTION = 5,
-  PRICE = 6,
+  DESCRIPTION = 0,
+  PRICE = 5,
 }
 
 const BusinessModal = () => {
   const [features, setFeatures] = useState<Feature[]>([]);
 
+  const [aadhaar, setAadhaar] = useState("");
   const [isAadhaarValid, setIsAadhaarValid] = useState(false);
+
+  const debouncedAadhaar = useDebounce(aadhaar, 500);
 
   const [isAadhaar, setisAadhaar] = useState(false);
   const [aadhaarImgFront, setAadhaarImgFront] = useState<File | null>(null);
@@ -159,7 +163,7 @@ const BusinessModal = () => {
     setOffTime(updatedTime);
   };
   const businessModal = useSetupBusiness();
-  const [step, setStep] = useState(STEPS.CATEGORY);
+  const [step, setStep] = useState(STEPS.DESCRIPTION);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -235,20 +239,22 @@ const BusinessModal = () => {
     setOffTime(updatedOffTime);
   };
   const secondaryActionLabel = useMemo(() => {
-    if (step === STEPS.CATEGORY) {
+    if (step === STEPS.DESCRIPTION) {
       return undefined;
     }
     return "Back";
   }, [step]);
 
-  const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const aadhaarValue = e.target.value;
-    setValue("aadhaar", aadhaarValue, { shouldValidate: true });
-    const valid = isValid_Aadhaar_Number(aadhaarValue);
+  useEffect(() => {
+    const valid = isValid_Aadhaar_Number(debouncedAadhaar);
     setIsAadhaarValid(valid);
-    if (!valid) {
+    if (!valid && debouncedAadhaar.length === 14) {
       toast.error("Invalid Aadhaar number format.");
     }
+  }, [debouncedAadhaar]);
+
+  const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAadhaar(e.target.value);
   };
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -284,7 +290,7 @@ const BusinessModal = () => {
         toast.success("Wait for Approval!");
         router.refresh();
         reset();
-        setStep(STEPS.CATEGORY);
+        setStep(STEPS.DESCRIPTION);
         businessModal.onClose();
       })
       .catch(() => {
@@ -308,21 +314,30 @@ const BusinessModal = () => {
 
   let bodyContent = (
     <div className="flex flex-col gap-8">
-      <Heading title="Select Hair Salon to proceed further" />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto">
-        {categories.sort(sortByName).map((item) => (
-          <div className=" col-span-1" key={item.label}>
-            <CategoryInput
-              onClick={(category) => setCustomValue("category", category)}
-              selected={category === item.label}
-              label={item.label}
-              icon={item.icon}
-            />
-          </div>
-        ))}
-      </div>
+      <Heading
+        title="How would you describe your business?"
+        subtitle="Short and sweet works best!"
+      />
+      <Input
+        id="title"
+        label="Title"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+      />
+      <hr />
+      <Input
+        id="description"
+        label="Description"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+      />
     </div>
   );
+
   if (step === STEPS.AADHAAR) {
     if (isAadhaar) {
       setStep(STEPS.INFO);
@@ -347,7 +362,6 @@ const BusinessModal = () => {
         <Input
           type="file"
           id="aadhaarFrontImg"
-          label="Aadhar Front Image (accept jpeg,png,jpg only)"
           register={register}
           errors={errors}
           accept=".jpg, .jpeg, .png"
@@ -358,9 +372,9 @@ const BusinessModal = () => {
         <Input
           type="file"
           id="aadhaarBackImg"
-          label="Aadhar Back Image (accept jpeg,png,jpg only)"
           register={register}
           errors={errors}
+          accept=".jpg, .jpeg, .png"
           required
         />
       </div>
@@ -442,34 +456,6 @@ const BusinessModal = () => {
     );
   }
 
-  if (step === STEPS.DESCRIPTION) {
-    bodyContent = (
-      <div className="flex flex-col gap-8">
-        <Heading
-          title="How would you describe your business?"
-          subtitle="Short and sweet works best!"
-        />
-        <Input
-          id="title"
-          label="Title"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-          required
-        />
-        <hr />
-        <Input
-          id="description"
-          label="Description"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-          required
-        />
-      </div>
-    );
-  }
-
   if (step === STEPS.ADDRESS) {
     bodyContent = (
       <div className="flex flex-col gap-8">
@@ -545,7 +531,7 @@ const BusinessModal = () => {
       onSubmit={handleSubmit(onSubmit)}
       actionLabel={actionLabel}
       secondaryActionLabel={secondaryActionLabel}
-      secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
+      secondaryAction={step === STEPS.DESCRIPTION ? undefined : onBack}
       body={bodyContent}
       disabled={isLoading}
     />

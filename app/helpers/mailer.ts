@@ -12,9 +12,10 @@ const client = new SMTPClient({
 interface sendEmailParams {
   email: string;
   userId: string;
+  emailType: string;
 }
 
-export const sendMail = async ({ email, userId }: sendEmailParams) => {
+export const sendMail = async ({ email, userId, emailType }: sendEmailParams) => {
   const hashedToken = await bcrypt.hash(userId, 10);
   const updateData = {
     verifyToken: hashedToken,
@@ -26,12 +27,34 @@ export const sendMail = async ({ email, userId }: sendEmailParams) => {
     data: updateData,
   });
 
-  const message = {
-    text: `Click the following link to verify your email: ${process.env.NEXT_PUBLIC_BASE_URL}/verifyemail?token=${hashedToken}`,
-    from: "thexpresssalon@gmail.com",
-    to: email,
-    subject: "Verify Your Email",
-  };
+  let message; 
+
+  if(emailType === "VERIFY"){
+     message = {
+      text: `Click the following link to verify your email: ${process.env.NEXT_PUBLIC_BASE_URL}/verifyemail?token=${hashedToken}`,
+      from: "thexpresssalon@gmail.com",
+      to: email,
+      subject: "Verify Your Email",
+    };
+  }
+  else{
+    if(emailType === "APPROVED"){
+      message = {
+        text: `Your Salon is Now Listed on our website`,
+        from: "thexpresssalon@gmail.com",
+        to: email,
+        subject: "Salon Approval",
+      }
+    }
+    else{
+      message = {
+        text: `Your Salon is Now Removed from our website`,
+        from: "thexpresssalon@gmail.com",
+        to: email,
+        subject: "Salon Removed",
+      }
+    }
+  }
 
   try {
     await client.sendAsync(message);

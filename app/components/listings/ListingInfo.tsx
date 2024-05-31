@@ -97,7 +97,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
             text-neutral-500
           "
           >
-            <div className="grid grid-cols-3  font-semibold text-black">
+            <div className="grid grid-cols-3 font-semibold text-black">
               <text>Service</text>
               <div className="ml-5">Price</div>
               <div className=""></div>

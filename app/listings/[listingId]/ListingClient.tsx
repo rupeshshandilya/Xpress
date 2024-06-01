@@ -108,7 +108,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   console.log(`free times: ${freeTimes}`);
   
   const [selectedTimeFeature, setSelectedTimeFeature] =
-    useState(freeTimes);
+    useState<Date[]>([]);
 
     console.log(`free time: ${selectedTimeFeature}`);
     

@@ -107,8 +107,11 @@ const ListingClient: React.FC<ListingClientProps> = ({
   });
   console.log(`free times: ${freeTimes}`);
   
-  const [selectedTimeFeature, setSelectedTimeFeature] =
-    useState<Date[]>([]);
+  /* const [selectedTimeFeature, setSelectedTimeFeature] =
+    useState<Date[]>([]); */
+
+    const [selectedTimeFeature, setSelectedTimeFeature] =
+    useState([freeTimes[0]]);
 
     console.log(`free time: ${selectedTimeFeature}`);
     
@@ -370,7 +373,7 @@ const onCreateReservation = useCallback(async() => {
       }
        catch (err) {
         console.log(err);
-        toast.error("Something went wrong");
+        toast.error("Something went wrong"+err);
       }
       finally{
         setIsLoading(false);

@@ -111,7 +111,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
     useState<Date[]>([]); */
 
     const [selectedTimeFeature, setSelectedTimeFeature] =
-    useState([freeTimes[0]]);
+    useState(freeTimes);
 
     console.log(`free time: ${selectedTimeFeature}`);
     
@@ -251,7 +251,7 @@ const onCreateReservation = useCallback(async() => {
     console.log(totalPriceAfterTax)
     const checkForDuplicates = (array: Date[]) => {
       const dateSet = new Set();
-      for (const date of array) {
+      for (const date of array.splice(0,selectedFeatures.length)) {
         if (dateSet.has(date.toISOString())) {
           return true;
         }

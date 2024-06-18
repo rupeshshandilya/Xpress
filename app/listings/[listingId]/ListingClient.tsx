@@ -251,7 +251,7 @@ const onCreateReservation = useCallback(async() => {
     console.log(totalPriceAfterTax)
     const checkForDuplicates = (array: Date[]) => {
       const dateSet = new Set();
-      for (const date of array.splice(0,selectedFeatures.length)) {
+      for (const date of array.slice(0,selectedFeatures.length)) {
         if (dateSet.has(date.toISOString())) {
           return true;
         }
@@ -326,8 +326,8 @@ const onCreateReservation = useCallback(async() => {
                       await axios
                       .post("https://book.thexpresssalon.com/api/reservations", {
                         totalPrice: parseInt(totalPriceAfterTax),
-                        startDate: selectedTimeFeature,
-                        startTime: selectedTimeFeature,
+                        startDate: selectedTimeFeature.map(date => date.toISOString()),
+                        startTime: selectedTimeFeature.map(date => date.toISOString()),
                         listingId: listing?.id,
                         features: selectedFeatures,
                       }).then(() => {

@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type Feature {
+  service String
+  price   Int
+}
+
+model User {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  name               String?
+  email              String          @unique
+  emailVerified      DateTime?
+  verifyToken        String?
+  verifyTokenExpiry  DateTime?
+  isVerified         Boolean?         @default(false)
+  image              String?
+  hashedPassword     String?
+  phoneNumber        String?          @unique
+  aadhaar            String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  favoriteIds        String[]         @db.ObjectId
+  accounts           Account[]
+  listings           Listing[]
+  reservations       Reservation[]
+  role               String?          @default("USER")
+  PaymentHistory     PaymentHistory[]
+  aadhaarImgSrcFront String?
+  aadhaarImgSrcBack  String?
+  Review             Review[]
+  isSalonOwner       Boolean     @default(false)
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Listing {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  description   String
+  imageSrc      String
+  createdAt     DateTime  @default(now())
+  category      String?
+  time          String?
+  address       String
+  // locationValue String
+  userId        String    @db.ObjectId
+  price         Int
+  approved      Boolean   @default(false)
+  // featureOne String?
+  // featureTwo String?
+  features      Feature[]
+  offTime       String[]
+
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reservations   Reservation[]
+  PaymentHistory PaymentHistory[]
+  Review         Review[]       
+}
+
+model Reservation {
+  id                String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String     @db.ObjectId
+  listingId         String     @db.ObjectId
+  startDate         DateTime
+  features          Feature
+  endDate           DateTime?
+  totalPrice        Float
+  createdAt         DateTime   @default(now())
+  startTime         DateTime
+  endTime           DateTime?
+  rescheduleCount   Int?       @default(0)
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing           Listing    @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  otp               Int?
+}
+
+model PaymentHistory {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  listingId String   @db.ObjectId
+  amount    Float
+  dueAmount Float?
+  createdAt DateTime @default(now())
+  title     String
+  category  String
+  user      User     @relation(fields: [userId], references: [id],onDelete:Cascade)
+  listing   Listing  @relation(fields: [listingId], references: [id],onDelete:Cascade)
+}
+
+model Review {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  listingId String   @db.ObjectId
+  comment   String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id],onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id],onDelete: Cascade)
+}

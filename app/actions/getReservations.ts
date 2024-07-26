@@ -34,7 +34,6 @@ export default async function getReservations(params: IParams) {
         createdAt: "desc",
       },
     });
-    console.log(reservations);
     const safeReservations = reservations?.map((reservation) => ({
       ...reservation,
       createdAt: reservation.createdAt.toISOString(),

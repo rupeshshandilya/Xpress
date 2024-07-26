@@ -57,7 +57,7 @@ const UpcomingClient: React.FC<UpcomingClientProps> = ({
     async (reservation: SafeReservation) => {
       try {
         const rescheduleCount = reservation.rescheduleCount ?? 0;
-        if (rescheduleCount >= 25) {
+        if (rescheduleCount >= 1) {
           toast.error(
             "Max reschedule Limit for this reservation has been reached"
           );
@@ -112,15 +112,12 @@ const UpcomingClient: React.FC<UpcomingClientProps> = ({
       if (!listingOwner || !listingOwner.email) {
         throw new Error("Owner not found");
       }
-  
-      console.log(previousTime, " ", rescheduledTime);
-  
       // Send email notification to the owner
       await sendMail({
         email: listingOwner.email,
         userId: currentUser.id,
         emailType: "RESCHEDULE",
-        details: { previousTime, rescheduledTime },
+        details: { previousTime, rescheduledTime }
       });
     } catch (error) {
       console.error("Error handling reschedule:", error);

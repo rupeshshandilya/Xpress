@@ -7,7 +7,7 @@ import { getAnalytics } from "firebase/analytics";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCStzvEs3rZKGzAcvEmyD4EpohfE-i6rS4",
+  apiKey: "",
   authDomain: "xpresswebsite.firebaseapp.com",
   projectId: "xpresswebsite",
   storageBucket: "xpresswebsite.appspot.com",

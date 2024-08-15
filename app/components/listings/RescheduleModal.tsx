@@ -48,6 +48,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
   const listingTime = reservationDetails.listing.time;
   const listingOffTime = reservationDetails.listing.offTime;
   const [freeTimes, setFreeTimes] = useState<Date[]>([]);
+  const [disabled, setDisbabled] = useState(false);
 
   let today = startOfToday();
   let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
@@ -75,6 +76,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
       setSelectedDate(minDay);
       setMinSelectableDate(minDay);
       setMaxSelectableDate(maxDate);
+      if (maxDate < today) setDisbabled(true);
     }
   }, [reservationDetails]);
 
@@ -221,6 +223,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
             </div>
             <hr />
             <button
+              disabled={disabled}
               onClick={() => handleConfirm(selectedDate)}
               className="bg-black text-white px-4 py-2 text-lg rounded-3xl mt-10 hover:bg-black/20"
             >

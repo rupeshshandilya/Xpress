@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-import prisma from '@/app/libs/prismadb';
-import getCurrentUser from '@/app/actions/getCurrentUser';
+import prisma from "@/app/libs/prismadb";
+import getCurrentUser from "@/app/actions/getCurrentUser";
 
 function createGoogleMapsLink(address: string) {
   const baseUrl = "https://www.google.com/maps/search/?api=1&query=";
@@ -26,7 +26,8 @@ export async function POST(request: Request) {
     features,
     price,
     address,
-    offTime
+    offTime,
+    coordinates,
   } = body;
 
   Object.keys(body).forEach((value: any) => {
@@ -34,7 +35,6 @@ export async function POST(request: Request) {
       NextResponse.error();
     }
   });
-
 
   const googleMapsLink = createGoogleMapsLink(address);
 
@@ -50,6 +50,7 @@ export async function POST(request: Request) {
       price: parseInt(price, 10),
       userId: currentUser.id,
       offTime,
+      coordinates,
     },
   });
 

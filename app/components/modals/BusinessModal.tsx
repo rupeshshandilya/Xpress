@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Modal from "./Modal";
@@ -13,6 +13,7 @@ import { categories } from "../navbar/Categories";
 import CategoryInput from "../inputs/CategoryInput";
 import ImageUpload from "../inputs/ImageUpload";
 import Input from "../inputs/Input";
+import GoogleMaps from "../GoogleMaps";
 import { Feature } from "@prisma/client";
 import useDebounce from "@/app/hooks/useDebounce";
 
@@ -27,6 +28,11 @@ enum STEPS {
   PRICE = 5,
 }
 
+interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
+
 const BusinessModal = () => {
   const [features, setFeatures] = useState<Feature[]>([]);
 
@@ -38,6 +44,7 @@ const BusinessModal = () => {
   const [isAadhaar, setisAadhaar] = useState(false);
   const [aadhaarImgFront, setAadhaarImgFront] = useState<File | null>(null);
   const [aadhaarImgBack, setAadhaarImgBack] = useState<File | null>(null);
+
   const handleImageChangeFront = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     setAadhaarImgFront(e.target.files[0]);
@@ -50,6 +57,10 @@ const BusinessModal = () => {
   };
 
   const [offTime, setOffTime] = useState<string[]>([]);
+  const [coordinates, setCoordinates] = useState<Coordinates>({
+    latitude: 0,
+    longitude: 0,
+  });
 
   const addOffTime = () => {
     setOffTime([...offTime, ""]);
@@ -218,6 +229,14 @@ const BusinessModal = () => {
       toast.error("Please enter a valid Aadhaar number to proceed.");
       return;
     }
+    if (
+      step === STEPS.ADDRESS &&
+      coordinates.latitude == 0 &&
+      coordinates.longitude == 0
+    ) {
+      toast.error("Please mark your address on the map to proceed.");
+      return;
+    }
     setStep((value) => value + 1);
   };
 
@@ -238,6 +257,19 @@ const BusinessModal = () => {
     updatedOffTime.pop();
     setOffTime(updatedOffTime);
   };
+
+  const getCoordinates = useCallback(
+    (lat: number, long: number) => {
+      const coords = {
+        latitude: lat,
+        longitude: long,
+      };
+      console.log("coords ", coords);
+      setCoordinates(coords);
+    },
+    [setCoordinates]
+  );
+
   const secondaryActionLabel = useMemo(() => {
     if (step === STEPS.DESCRIPTION) {
       return undefined;
@@ -284,6 +316,7 @@ const BusinessModal = () => {
         ...data,
         features,
         offTime,
+        coordinates,
       })
       .then(() => {
         // addAadhaar(data.aadhaar);
@@ -471,6 +504,8 @@ const BusinessModal = () => {
           errors={errors}
           required
         />
+        <Heading title="Mark your location on Map" />
+        <GoogleMaps onSelect={getCoordinates} />
       </div>
     );
   }

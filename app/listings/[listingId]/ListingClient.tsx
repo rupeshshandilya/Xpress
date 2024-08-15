@@ -475,6 +475,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
               offtimes={offTimes}
               selectedDate={selectedDate}
               address={listing?.address}
+              coordinates={listing.coordinates}
             />
             <Reviews
               listingId={listing.id}

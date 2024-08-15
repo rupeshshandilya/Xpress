@@ -6,6 +6,7 @@ import { SafeUser } from "@/app/types";
 import ListingCategory from "./ListingCategory";
 import Button from "../Button";
 import { Feature } from "@prisma/client";
+import { Coordinates } from "@prisma/client";
 import { useState } from "react";
 import ListingEditModal from "./ListingEditModal";
 import Link from "next/link";
@@ -35,6 +36,7 @@ interface ListingInfoProps {
   offtimes: string[];
   selectedDate: Date;
   address: string;
+  coordinates:Coordinates;
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
@@ -54,19 +56,20 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   updateOfftime,
   offtimes,
   address,
+  coordinates,
 }) => {
   const [modalVis, setModalVis] = useState(false);
   const handleIsReservationModal = (index: number) => {
     addFeature(index);
   };
 
-  const googleMapLink = (address: string) => {
+  const googleMapLink = (coordinates: Coordinates) => {
     const baseUrl = "https://www.google.com/maps/search/?api=1&query=" ;
-    const encodedAddress = encodeURIComponent(address);
-    return baseUrl + encodedAddress;
+    const query = `${coordinates.latitude},${coordinates.longitude}`;
+    return baseUrl + encodeURIComponent(query);
   }
 
-  address = googleMapLink(address);
+  address = googleMapLink(coordinates);
 
   return (
     <>

@@ -29,6 +29,7 @@ import toast from "react-hot-toast";
 interface ListingReservationModalProps {
   time: string;
   offTime: string[];
+  offDays: string[];
   selectedDate: Date;
   reserved: SafeReservation[];
   features: Feature[];
@@ -44,6 +45,7 @@ interface ListingReservationModalProps {
 const ListingReservationModal: React.FC<ListingReservationModalProps> = ({
   time,
   offTime,
+  offDays,
   selectedDate,
   reserved = [],
   features,
@@ -191,6 +193,9 @@ const ListingReservationModal: React.FC<ListingReservationModalProps> = ({
               minDate={minSelectableDate}
               date={selectedDate}
               onChange={handleDateSelect}
+              disabledDay={(date) => {
+                return offDays.includes(date.getDay().toString());
+              }}
             />
             <div className="flex flex-col items-center gap-2 mt-2 ">
               <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 text-md gap-2">

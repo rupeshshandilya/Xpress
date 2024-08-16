@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 import { Range } from "react-date-range";
-import {
-  addDays,
-  addHours,
-} from "date-fns";
+import { addDays, addHours } from "date-fns";
 
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
@@ -35,12 +32,13 @@ interface ListingReservationProps {
   reserved: SafeReservation[];
   features: Feature[];
   offTime: string[];
+  offDays: string[];
   removeFeature: (featureIndex: number) => void;
   time: string;
-  selectedTimeFeature: Date[]
+  selectedTimeFeature: Date[];
   selectedDate: Date;
-  setSelectedDate: (date: Date) => void
-  setSelectedTimeFeature: (date: Date[]) => void | Date[]
+  setSelectedDate: (date: Date) => void;
+  setSelectedTimeFeature: (date: Date[]) => void | Date[];
 }
 
 const ListingReservation: React.FC<ListingReservationProps> = ({
@@ -53,13 +51,13 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   removeFeature,
   time,
   offTime,
+  offDays,
   selectedDate,
   setSelectedDate,
   selectedTimeFeature,
   setSelectedTimeFeature,
 }) => {
   const [index, setIndex] = useState<number | null>(null);
-
 
   let nextDay = addHours(addDays(new Date().setMinutes(0), 0), 2);
 
@@ -80,20 +78,32 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
 
   return (
     <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
-      {features.length > 0 && <h1 className="text-xl font-semibold  p-2">Select Time</h1>}
+      {features.length > 0 && (
+        <h1 className="text-xl font-semibold  p-2">Select Time</h1>
+      )}
       {features.map((feature, index) => (
         <div key={index} className="feature grid grid-cols-3 py-2 ">
-          <h1 className="text-lg font-semibold px-2 italic capitalize" > {feature.service}</h1>
+          <h1 className="text-lg font-semibold px-2 italic capitalize">
+            {" "}
+            {feature.service}
+          </h1>
           <div className="">₹{feature.price}</div>
-          <button className="bg-black text-white relative bottom-14 right-3 px-2 py-2 text-sm rounded-xl mt-10 hover:bg-black/20" onClick={() => removeFeature(index)}>
+          <button
+            className="bg-black text-white relative bottom-14 right-3 px-2 py-2 text-sm rounded-xl mt-10 hover:bg-black/20"
+            onClick={() => removeFeature(index)}
+          >
             Cancel
           </button>
           <div className="text-sm sm:text-base relative bottom-4 left-2">
-            {selectedTimeFeature[index]?.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+            {selectedTimeFeature[index]?.toLocaleString([], {
+              dateStyle: "medium",
+              timeStyle: "short",
+            })}
           </div>
           <button
-          className="bg-black text-white relative left-24 sm:left-40 bottom-5 px-2 py-2 text-sm rounded-xl hover:bg-black/20" 
-          onClick={() => setIndex(index)}>
+            className="bg-black text-white relative left-24 sm:left-40 bottom-5 px-2 py-2 text-sm rounded-xl hover:bg-black/20"
+            onClick={() => setIndex(index)}
+          >
             Select Slot
           </button>
         </div>
@@ -103,6 +113,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         <ListingReservationModal
           time={time}
           offTime={offTime}
+          offDays={offDays}
           selectedDate={selectedDate}
           reserved={reserved}
           features={features}

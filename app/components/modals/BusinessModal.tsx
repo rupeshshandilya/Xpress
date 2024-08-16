@@ -28,6 +28,16 @@ enum STEPS {
   PRICE = 5,
 }
 
+const daysOfWeek = [
+  { value: "0", label: "Sunday" },
+  { value: "1", label: "Monday" },
+  { value: "2", label: "Tuesday" },
+  { value: "3", label: "Wednesday" },
+  { value: "4", label: "Thursday" },
+  { value: "5", label: "Friday" },
+  { value: "6", label: "Saturday" },
+];
+
 interface Coordinates {
   latitude: number;
   longitude: number;
@@ -57,6 +67,7 @@ const BusinessModal = () => {
   };
 
   const [offTime, setOffTime] = useState<string[]>([]);
+  const [offDays, setOffDays] = useState<string[]>([]);
   const [coordinates, setCoordinates] = useState<Coordinates>({
     latitude: 0,
     longitude: 0,
@@ -64,6 +75,9 @@ const BusinessModal = () => {
 
   const addOffTime = () => {
     setOffTime([...offTime, ""]);
+  };
+  const addOffDay = () => {
+    setOffDays([...offDays, ""]);
   };
   const addFeature = () => {
     setFeatures([
@@ -173,6 +187,11 @@ const BusinessModal = () => {
     updatedTime[index] = value;
     setOffTime(updatedTime);
   };
+  const handleOffDaysChange = (index: number, value: string) => {
+    const updatedDays: string[] = [...offDays];
+    updatedDays[index] = value;
+    setOffDays(updatedDays);
+  };
   const businessModal = useSetupBusiness();
   const [step, setStep] = useState(STEPS.DESCRIPTION);
   const [isLoading, setIsLoading] = useState(false);
@@ -257,6 +276,11 @@ const BusinessModal = () => {
     updatedOffTime.pop();
     setOffTime(updatedOffTime);
   };
+  const removeOffDay = () => {
+    const updatedOffDay = [...offDays];
+    updatedOffDay.pop();
+    setOffDays(updatedOffDay);
+  };
 
   const getCoordinates = useCallback(
     (lat: number, long: number) => {
@@ -316,6 +340,7 @@ const BusinessModal = () => {
         ...data,
         features,
         offTime,
+        offDays,
         coordinates,
       })
       .then(() => {
@@ -552,6 +577,50 @@ const BusinessModal = () => {
             onClick={removeOffTime}
           >
             Remove offtime
+          </button>
+        </div>
+        <Heading title="Now set your off days" />
+
+        <div className="flex gap-2 flex-wrap">
+          {offDays.map((day, index) => {
+            const availableDays = daysOfWeek.filter(
+              (dayOption) => !offDays.includes(dayOption.value) || dayOption.value === day
+            );
+            return (
+              <div className="flex gap-8" key={index}>
+                <select
+                  className="border p-2"
+                  value={day}
+                  onChange={(e) => handleOffDaysChange(index, e.target.value)}
+                  disabled={isLoading}
+                >
+                  <option value="" disabled>
+                    Select a day
+                  </option>
+                  {availableDays.map((dayOption) => (
+                    <option key={dayOption.value} value={dayOption.value}>
+                      {dayOption.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            );
+          })}
+        </div>
+        <div className="flex gap-4">
+          <button
+            type="button"
+            className="mt-2 bg-blue-500 text-white p-2 rounded"
+            onClick={addOffDay}
+          >
+            Add offDays
+          </button>
+          <button
+            type="button"
+            className="mt-2 bg-red-500 text-white p-2 rounded"
+            onClick={removeOffDay}
+          >
+            Remove offdays
           </button>
         </div>
       </div>

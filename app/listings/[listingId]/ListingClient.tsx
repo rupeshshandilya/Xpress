@@ -490,6 +490,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
               setSelectedDate={setSelectedDate}
               removeFeature={removeFeature}
               features={selectedFeatures}
+              offDays={listing.offDays}
               offTime={listing.offTime}
               price={listing.price}
               totalPrice={totalPrice}

@@ -47,6 +47,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
   const [maxSelectableDate, setMaxSelectableDate] = useState<Date>(new Date());
   const listingTime = reservationDetails.listing.time;
   const listingOffTime = reservationDetails.listing.offTime;
+  const listingOffDays=reservationDetails.listing.offDays;
   const [freeTimes, setFreeTimes] = useState<Date[]>([]);
   const [disabled, setDisbabled] = useState(false);
 
@@ -177,6 +178,9 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
               maxDate={maxSelectableDate}
               date={selectedDate}
               onChange={handleDateSelect}
+              disabledDay={(date) => {
+                return listingOffDays.includes(date.getDay().toString());
+              }}
             />
             <div className="flex flex-col items-center gap-2 mt-2 ">
               <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 text-md gap-2">

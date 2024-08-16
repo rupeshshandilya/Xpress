@@ -27,6 +27,7 @@ export async function POST(request: Request) {
     price,
     address,
     offTime,
+    offDays,
     coordinates,
   } = body;
 
@@ -50,6 +51,7 @@ export async function POST(request: Request) {
       price: parseInt(price, 10),
       userId: currentUser.id,
       offTime,
+      offDays,
       coordinates,
     },
   });

@@ -83,6 +83,7 @@ model Listing {
   // featureTwo String?
   features      Feature[]
   offTime       String[]
+  offDays       String[]
 
   user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   reservations   Reservation[]

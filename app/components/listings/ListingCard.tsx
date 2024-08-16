@@ -21,6 +21,8 @@ interface ListingCardProps {
   currentUser?: SafeUser | null;
   revenueMap?: { [key: string]: number };
   dueAmountMap?: { [key: string]: number };
+  address?:String;
+  distance?:String | null
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
@@ -36,6 +38,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
   currentUser,
   revenueMap,
   dueAmountMap,
+  address,
+  distance
 }) => {
   const router = useRouter();
   const handleCancel = useCallback(
@@ -97,6 +101,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
         </div>
         <div className="font-semibold text-lg text-black-500">{data.title}</div>
+        <div className="font-normal text-base text-black-500">{address}</div>
+        <div className="font-normal text-base text-black-500">{distance} km</div>
         <div className="font-semibold text-lg text-black-500">
           {revenueMap && revenueMap.hasOwnProperty(data.id)
             ? revenueMap[data.id]

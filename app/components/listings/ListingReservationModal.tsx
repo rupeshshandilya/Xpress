@@ -71,6 +71,12 @@ const ListingReservationModal: React.FC<ListingReservationModalProps> = ({
     setSelectedDate(date);
     onSelect(date);
   };
+  const handleDisabledDays = (date: Date): boolean => {
+    // Your logic to determine if the date should be disabled
+    // For example:
+    const today = new Date();
+    return date < today; // Disable past dates
+  };
   const minSelectableDate = addDays(new Date(), 0);
 
   let today = startOfToday();

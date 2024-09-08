@@ -59,6 +59,12 @@ const Admin = async ({ searchParams }: Props) => {
                       </th>
                       <th
                         scope="col"
+                        className="sticky top-0 -z-10  border-b border-gray-300 bg-white bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
+                      >
+                        Client Category
+                      </th>
+                      <th
+                        scope="col"
                         className="sticky top-0 -z-10 border-b border-gray-300 bg-white bg-opacity-75 py-5.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
                       >
                         <span className="sr-only">Edit</span>
@@ -87,6 +93,16 @@ const Admin = async ({ searchParams }: Props) => {
                           )}
                         >
                           {item.title}
+                        </td>
+                        <td
+                          className={classNames(
+                            Idx !== listings.length - 1
+                              ? "border-b border-gray-200"
+                              : "",
+                            "whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:table-cell"
+                          )}
+                        >
+                          {item.SalonType}
                         </td>
                         <td
                           className={classNames(

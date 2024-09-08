@@ -17,6 +17,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
+  
   const {
     title,
     description,
@@ -29,7 +30,9 @@ export async function POST(request: Request) {
     offTime,
     offDays,
     coordinates,
+    SalonType,
   } = body;
+  console.log("SalonType:", body.SalonType);
 
   Object.keys(body).forEach((value: any) => {
     if (!body[value]) {
@@ -53,8 +56,9 @@ export async function POST(request: Request) {
       offTime,
       offDays,
       coordinates,
+      SalonType
     },
   });
-
+  console.log("Created listing:", listing);
   return NextResponse.json(listing);
 }

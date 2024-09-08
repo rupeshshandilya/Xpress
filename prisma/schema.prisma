@@ -16,14 +16,14 @@ type Feature {
 }
 
 type Coordinates {
-  latitude Float
+  latitude  Float
   longitude Float
 }
 
 model User {
   id                 String           @id @default(auto()) @map("_id") @db.ObjectId
   name               String?
-  email              String          @unique
+  email              String           @unique
   emailVerified      DateTime?
   verifyToken        String?
   verifyTokenExpiry  DateTime?
@@ -43,7 +43,7 @@ model User {
   aadhaarImgSrcFront String?
   aadhaarImgSrcBack  String?
   Review             Review[]
-  isSalonOwner       Boolean     @default(false)
+  isSalonOwner       Boolean          @default(false)
 }
 
 model Account {
@@ -66,46 +66,47 @@ model Account {
 }
 
 model Listing {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  description   String
-  imageSrc      String
-  createdAt     DateTime  @default(now())
-  category      String?
-  time          String?
-  address       String
-  coordinates   Coordinates
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  imageSrc    String
+  createdAt   DateTime    @default(now())
+  category    String?
+  time        String?
+  address     String
+  coordinates Coordinates
   // locationValue String
-  userId        String    @db.ObjectId
-  price         Int
-  approved      Boolean   @default(false)
+  userId      String      @db.ObjectId
+  price       Int
+  approved    Boolean     @default(false)
+  SalonType String?
   // featureOne String?
   // featureTwo String?
-  features      Feature[]
-  offTime       String[]
-  offDays       String[]
+  features    Feature[]
+  offTime     String[]
+  offDays     String[]
 
   user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   reservations   Reservation[]
   PaymentHistory PaymentHistory[]
-  Review         Review[]       
+  Review         Review[]
 }
 
 model Reservation {
-  id                String     @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String     @db.ObjectId
-  listingId         String     @db.ObjectId
-  startDate         DateTime
-  features          Feature
-  endDate           DateTime?
-  totalPrice        Float
-  createdAt         DateTime   @default(now())
-  startTime         DateTime
-  endTime           DateTime?
-  rescheduleCount   Int?       @default(0)
-  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  listing           Listing    @relation(fields: [listingId], references: [id], onDelete: Cascade)
-  otp               Int?
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String    @db.ObjectId
+  listingId       String    @db.ObjectId
+  startDate       DateTime
+  features        Feature
+  endDate         DateTime?
+  totalPrice      Float
+  createdAt       DateTime  @default(now())
+  startTime       DateTime
+  endTime         DateTime?
+  rescheduleCount Int?      @default(0)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing         Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  otp             Int?
 }
 
 model PaymentHistory {
@@ -117,8 +118,8 @@ model PaymentHistory {
   createdAt DateTime @default(now())
   title     String
   category  String
-  user      User     @relation(fields: [userId], references: [id],onDelete:Cascade)
-  listing   Listing  @relation(fields: [listingId], references: [id],onDelete:Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 }
 
 model Review {
@@ -128,6 +129,6 @@ model Review {
   comment   String
   createdAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id],onDelete: Cascade)
-  listing Listing @relation(fields: [listingId], references: [id],onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
 }

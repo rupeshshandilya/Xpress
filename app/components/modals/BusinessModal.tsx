@@ -18,14 +18,13 @@ import { Feature } from "@prisma/client";
 import useDebounce from "@/app/hooks/useDebounce";
 
 enum STEPS {
-  // CATEGORY = 0,
-
   AADHAAR = 1,
   INFO = 2,
   ADDRESS = 3,
-  IMAGES = 4,
+  IMAGES = 5,
   DESCRIPTION = 0,
-  PRICE = 5,
+  PRICE = 6,
+  SALONTYPE = 4,
 }
 
 const daysOfWeek = [
@@ -55,6 +54,18 @@ const BusinessModal = () => {
   const [aadhaarImgFront, setAadhaarImgFront] = useState<File | null>(null);
   const [aadhaarImgBack, setAadhaarImgBack] = useState<File | null>(null);
 
+  const [offTime, setOffTime] = useState<string[]>([]);
+  const [offDays, setOffDays] = useState<string[]>([]);
+  const [coordinates, setCoordinates] = useState<Coordinates>({
+    latitude: 0,
+    longitude: 0,
+  });
+
+  const businessModal = useSetupBusiness();
+  const [step, setStep] = useState(STEPS.DESCRIPTION);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const handleImageChangeFront = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     setAadhaarImgFront(e.target.files[0]);
@@ -66,12 +77,7 @@ const BusinessModal = () => {
     console.log(aadhaarImgBack);
   };
 
-  const [offTime, setOffTime] = useState<string[]>([]);
-  const [offDays, setOffDays] = useState<string[]>([]);
-  const [coordinates, setCoordinates] = useState<Coordinates>({
-    latitude: 0,
-    longitude: 0,
-  });
+  
 
   const addOffTime = () => {
     setOffTime([...offTime, ""]);
@@ -177,6 +183,7 @@ const BusinessModal = () => {
       setIsLoading(false);
     }
   };
+
   const handleFeatureChange = (index: number, value: Feature) => {
     const updatedFeatures = [...features];
     updatedFeatures[index] = value;
@@ -192,10 +199,7 @@ const BusinessModal = () => {
     updatedDays[index] = value;
     setOffDays(updatedDays);
   };
-  const businessModal = useSetupBusiness();
-  const [step, setStep] = useState(STEPS.DESCRIPTION);
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  
 
   const {
     register,
@@ -217,6 +221,7 @@ const BusinessModal = () => {
       aadhaarFrontImg: "",
       aadhaarBackImg: "",
       description: "",
+      salontype: "",
       features: [{ service: "", price: 0 }],
     },
   });
@@ -318,6 +323,9 @@ const BusinessModal = () => {
       return onNext();
     }
 
+    console.log(`data: ${data.salontype}`);
+    
+
     const { aadhaar, aadhaarFrontImg, aadhaarBackImg } = data;
     if (aadhaar || aadhaarFrontImg || aadhaarBackImg) {
       const frontImageBase64 = await convertImageToBase64(
@@ -342,6 +350,7 @@ const BusinessModal = () => {
         offTime,
         offDays,
         coordinates,
+        SalonType: data.salontype,
       })
       .then(() => {
         // addAadhaar(data.aadhaar);
@@ -351,7 +360,7 @@ const BusinessModal = () => {
         setStep(STEPS.DESCRIPTION);
         businessModal.onClose();
       })
-      .catch(() => {
+      .catch((error) => {
         toast.error("Something went wrong.");
         setIsLoading(false);
       })
@@ -535,6 +544,46 @@ const BusinessModal = () => {
     );
   }
 
+  // if (step === STEPS.SERVICETYPE) {
+  //   bodyContent = (
+  //     <div>
+  //       <label className="text-gray-900 font-medium block mt-4 mb-2">
+  //         Mode of Service
+  //       </label>
+  //       <select
+  //         id="servicetype"
+  //         {...register("servicetype", { required: true })}
+  //         className="form-select w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+  //         onChange={(e) => {
+  //           setCustomValue("servicetype", e.target.value);
+  //         }}
+  //       >
+  //         <option>Select</option>
+  //         <option value="SALON">Salon</option>
+  //         <option value="HOME">Home</option>
+  //       </select>
+  //     </div>
+  //   );
+  // }
+
+  if (step === STEPS.SALONTYPE) {
+    bodyContent = (
+      <select
+      id="salontype"
+      {...register("salontype", { required: true })}
+      className="form-select w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+      onChange={(e) => {
+        setCustomValue("salontype", e.target.value);
+      }}
+    >
+      <option>Select</option>
+      <option value="MALE">Male</option>
+      <option value="FEMALE">Female</option>
+      <option value="UNISEX">Unisex</option>
+    </select>    
+    );
+  }
+
   if (step === STEPS.PRICE) {
     bodyContent = (
       <div className="flex flex-col gap-8">
@@ -584,7 +633,8 @@ const BusinessModal = () => {
         <div className="flex gap-2 flex-wrap">
           {offDays.map((day, index) => {
             const availableDays = daysOfWeek.filter(
-              (dayOption) => !offDays.includes(dayOption.value) || dayOption.value === day
+              (dayOption) =>
+                !offDays.includes(dayOption.value) || dayOption.value === day
             );
             return (
               <div className="flex gap-8" key={index}>

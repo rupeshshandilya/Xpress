@@ -31,8 +31,8 @@ export async function POST(request: Request) {
     offDays,
     coordinates,
     SalonType,
+    ServiceType
   } = body;
-  console.log("SalonType:", body.SalonType);
 
   Object.keys(body).forEach((value: any) => {
     if (!body[value]) {
@@ -56,9 +56,9 @@ export async function POST(request: Request) {
       offTime,
       offDays,
       coordinates,
-      SalonType
+      SalonType,
+      ServiceType
     },
   });
-  console.log("Created listing:", listing);
   return NextResponse.json(listing);
 }

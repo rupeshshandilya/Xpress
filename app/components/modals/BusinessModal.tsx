@@ -21,9 +21,10 @@ enum STEPS {
   AADHAAR = 1,
   INFO = 2,
   ADDRESS = 3,
-  IMAGES = 5,
+  IMAGES = 6,
   DESCRIPTION = 0,
-  PRICE = 6,
+  PRICE = 7,
+  SERVICETYPE = 5,
   SALONTYPE = 4,
 }
 
@@ -222,6 +223,7 @@ const BusinessModal = () => {
       aadhaarBackImg: "",
       description: "",
       salontype: "",
+      servicetype: "",
       features: [{ service: "", price: 0 }],
     },
   });
@@ -293,7 +295,6 @@ const BusinessModal = () => {
         latitude: lat,
         longitude: long,
       };
-      console.log("coords ", coords);
       setCoordinates(coords);
     },
     [setCoordinates]
@@ -323,9 +324,6 @@ const BusinessModal = () => {
       return onNext();
     }
 
-    console.log(`data: ${data.salontype}`);
-    
-
     const { aadhaar, aadhaarFrontImg, aadhaarBackImg } = data;
     if (aadhaar || aadhaarFrontImg || aadhaarBackImg) {
       const frontImageBase64 = await convertImageToBase64(
@@ -351,6 +349,7 @@ const BusinessModal = () => {
         offDays,
         coordinates,
         SalonType: data.salontype,
+        ServiceType: data.servicetype,
       })
       .then(() => {
         // addAadhaar(data.aadhaar);
@@ -544,27 +543,26 @@ const BusinessModal = () => {
     );
   }
 
-  // if (step === STEPS.SERVICETYPE) {
-  //   bodyContent = (
-  //     <div>
-  //       <label className="text-gray-900 font-medium block mt-4 mb-2">
-  //         Mode of Service
-  //       </label>
-  //       <select
-  //         id="servicetype"
-  //         {...register("servicetype", { required: true })}
-  //         className="form-select w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-  //         onChange={(e) => {
-  //           setCustomValue("servicetype", e.target.value);
-  //         }}
-  //       >
-  //         <option>Select</option>
-  //         <option value="SALON">Salon</option>
-  //         <option value="HOME">Home</option>
-  //       </select>
-  //     </div>
-  //   );
-  // }
+  if (step === STEPS.SERVICETYPE) {
+    bodyContent = (
+      <div>
+        <label className="text-gray-900 font-medium block mt-4 mb-2">
+          Mode of Service
+        </label>
+        <select
+          id="servicetype"
+          {...register("servicetype", { required: true })}
+          className="form-select w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          onChange={(e) => {
+            setCustomValue("servicetype", e.target.value);
+          }}
+        >
+          <option value="SALON">Salon</option>
+          <option value="HOME">Home</option>
+        </select>
+      </div>
+    );
+  }
 
   if (step === STEPS.SALONTYPE) {
     bodyContent = (
@@ -576,7 +574,6 @@ const BusinessModal = () => {
         setCustomValue("salontype", e.target.value);
       }}
     >
-      <option>Select</option>
       <option value="MALE">Male</option>
       <option value="FEMALE">Female</option>
       <option value="UNISEX">Unisex</option>

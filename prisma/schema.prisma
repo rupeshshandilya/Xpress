@@ -80,6 +80,7 @@ model Listing {
   price       Int
   approved    Boolean     @default(false)
   SalonType String?
+  ServiceType String?
   // featureOne String?
   // featureTwo String?
   features    Feature[]

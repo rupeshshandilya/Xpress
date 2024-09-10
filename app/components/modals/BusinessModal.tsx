@@ -78,8 +78,6 @@ const BusinessModal = () => {
     console.log(aadhaarImgBack);
   };
 
-  
-
   const addOffTime = () => {
     setOffTime([...offTime, ""]);
   };
@@ -200,7 +198,6 @@ const BusinessModal = () => {
     updatedDays[index] = value;
     setOffDays(updatedDays);
   };
-  
 
   const {
     register,
@@ -557,6 +554,7 @@ const BusinessModal = () => {
             setCustomValue("servicetype", e.target.value);
           }}
         >
+          <option value="">Select Service</option>
           <option value="SALON">Salon</option>
           <option value="HOME">Home</option>
         </select>
@@ -566,18 +564,24 @@ const BusinessModal = () => {
 
   if (step === STEPS.SALONTYPE) {
     bodyContent = (
-      <select
-      id="salontype"
-      {...register("salontype", { required: true })}
-      className="form-select w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-      onChange={(e) => {
-        setCustomValue("salontype", e.target.value);
-      }}
-    >
-      <option value="MALE">Male</option>
-      <option value="FEMALE">Female</option>
-      <option value="UNISEX">Unisex</option>
-    </select>    
+      <div>
+        <label className="text-gray-900 font-medium block mt-4 mb-2">
+          Client Category
+        </label>
+        <select
+          id="salontype"
+          {...register("salontype", { required: true })}
+          className="form-select w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          onChange={(e) => {
+            setCustomValue("salontype", e.target.value);
+          }}
+        >
+          <option value="">Select Category</option>
+          <option value="MALE">Male</option>
+          <option value="FEMALE">Female</option>
+          <option value="UNISEX">Unisex</option>
+        </select>
+      </div>
     );
   }
 

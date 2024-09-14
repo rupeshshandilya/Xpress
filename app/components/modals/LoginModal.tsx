@@ -14,13 +14,16 @@ import Modal from "./Modal";
 import Input from "../inputs/Input";
 import Heading from "../Heading";
 import Button from "../Button";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import useForgetModal from "@/app/hooks/useForgetModal";
 
 const LoginModal = () => {
-  
   const router = useRouter();
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
+  const forgetModal = useForgetModal();
   const [isLoading, setIsLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const {
     register,
@@ -44,6 +47,7 @@ const LoginModal = () => {
 
       if (callback?.ok) {
         toast.success("Logged in");
+        router.push("/");
         router.refresh();
         loginModal.onClose();
       }
@@ -58,29 +62,47 @@ const LoginModal = () => {
     registerModal.onOpen();
   }, [loginModal, registerModal]);
 
+  const openForgetModal = useCallback(() => {
+    forgetModal.onOpen();
+    loginModal.onClose();
+  }, []);
+
   const bodyContent = (
     <div className="flex flex-col gap-4">
       <Heading title="Welcome back" subtitle="Login to your account!" />
       <Input
         id="email"
         label="Email"
-        type='email'
+        type="email"
         disabled={isLoading}
         register={register}
         errors={errors}
         required
-        pattern='^[a-zA-Z0-9._%+-]+@(gmail\.com|icloud\.com)$'
+        pattern="^[a-zA-Z0-9._%+-]+@(gmail\.com|icloud\.com)$"
       />
 
       <Input
         id="password"
         label="Password"
-        type="password"
+        type={isVisible ? "text" : "password"}
         disabled={isLoading}
         register={register}
         errors={errors}
         required
+        icon={
+          isVisible ? (
+            <FaEyeSlash onClick={() => setIsVisible(false)} />
+          ) : (
+            <FaEye onClick={() => setIsVisible(true)} />
+          )
+        }
+        iconPosition="right"
       />
+      <div className="flex justify-end">
+      <p className="cursor-pointer text-right" onClick={openForgetModal}>
+        Forget Password?
+      </p>
+    </div>
     </div>
   );
 

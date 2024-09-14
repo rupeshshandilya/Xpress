@@ -31,12 +31,12 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
 
   return (
     <div className="w-full z-10 fixed border-none outline-none text-gray-400 shadow-sm mb-8">
-      <div className="flex flex-row justify-between items-center py-3 px-4 sm:px-20 bg-[#2C2C2C]">
+      <div className="flex flex-row justify-between items-center py-3 px-4 sm:px-20 bg-[#000000]">
         <Link className="cursor-pointer" 
         href={"https://www.thexpresssalon.com/"}>
           <Image
             onClick={() => router.push('/')}
-            className="hidden md:block cursor-pointer"
+            className=" md:block cursor-pointer"
             src="/images/companylogo.png"
             height="200"
             width="60"

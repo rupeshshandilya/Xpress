@@ -28,19 +28,6 @@ const Home = async ({ searchParams }: HomeProps) => {
   }
   return (
     <ClientOnly>
-      {/* <Container>
-        <div className="pt-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 lg:grid-cols-4 2xl:grid-cols-6 gap-8">
-          {listings.map((listing) => {
-            return (
-              <ListingCard
-                currentUser={currentUser}
-                key={listing.id}
-                data={listing}
-              />
-            );
-          })}
-        </div>
-      </Container> */}
       <HomePage listings={listings} currentUser={currentUser} />
     </ClientOnly>
   );

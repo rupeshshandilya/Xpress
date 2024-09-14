@@ -25,14 +25,14 @@ const Footer = () => {
           128, SAIMPAL, Kalanaur, Rohtak, <br />
           Rohtak- 124113, Haryana, India
           </address>
-          <a href="#" className="text-blue-300 hover:text-blue-500">
+          <a href="https://maps.app.goo.gl/T8bQsn6SZL4CXhEG7" className="text-blue-300 hover:text-blue-500">
             Get Directions
           </a>
           <a
-            href="tel:8199859921"
+            href="mailto:contact@thexpresssalon.com"
             className="text-blue-300 hover:text-blue-500"
           >
-            Phone: +91 8199859921
+            contact@thexpresssalon.com
           </a>
         </div>
 
@@ -41,18 +41,6 @@ const Footer = () => {
           <Link href="/" className="text-blue-300 hover:text-blue-500">
             Salon
           </Link>
-          {/* <a href="#" className="text-blue-300 hover:text-blue-500">
-            Med Aesthetics
-          </a>
-          <a href="#" className="text-blue-300 hover:text-blue-500">
-            Spa
-          </a>
-          <a href="#" className="text-blue-300 hover:text-blue-500">
-            Massage
-          </a>
-          <a href="#" className="text-blue-300 hover:text-blue-500">
-            Nail Spa
-          </a> */}
         </div>
 
         <div className="flex flex-col">
@@ -91,17 +79,26 @@ const Footer = () => {
 
         <div className="flex flex-col">
           <span className="font-bold text-xl mb-2">Stay Updated</span>
-          {/* <a href="#" className="text-blue-300 hover:text-blue-500">
-            Facebook
-          </a> */}
-          <a href="https://www.instagram.com/thexpresssalon?igsh=MW1vb3E0Y3B2YzQzdg==" className="text-blue-300 hover:text-blue-500">
+          <a href="https://www.instagram.com/thexpresssalon?igsh=MWZpYWUxemRvdjlhbg==" className="text-blue-300 hover:text-blue-500">
             Instagram
+          </a>
+          <a href="https://www.facebook.com/share/FXnCJQsLmruwi8AX/?mibextid=qi2Omg" className="text-blue-300 hover:text-blue-500">
+            Facebook
+          </a>
+          <a href="https://x.com/thexpresssalon?t=Tj70kTSFlcHBfEom0Ni4pQ&s=09" className="text-blue-300 hover:text-blue-500">
+            X
+          </a>
+          <a href="https://www.linkedin.com/company/thexpresssalon/" className="text-blue-300 hover:text-blue-500">
+            Linkedin
+          </a>
+          <a href="https://youtube.com/@thexpresssalon?si=09SkreP9XieIiPPs" className="text-blue-300 hover:text-blue-500">
+            Youtube
           </a>
         </div>
       </div>
 
       <div className="text-center text-sm mt-8">
-        © {new Date().getFullYear()}, TheXpressSalon. All Rights Reserved.
+        © {new Date().getFullYear()}, Changil Abhinav Services Private Limited. All Rights Reserved.
       </div>
     </footer>
   );

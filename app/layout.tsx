@@ -11,6 +11,7 @@ import SearchModal from './components/modals/SearchModal';
 import Script from "next/script";
 import Footer from './components/Footer';
 import { useContext } from 'react';
+import ForgetModal from './components/modals/ForgetModal';
 const inter = Figtree({ subsets: ['latin'] });
 
 export const metadata = {
@@ -35,6 +36,7 @@ export default async function RootLayout({
             <SearchModal />
             <LoginModal />
             <RegisterModal />
+            <ForgetModal />
             <Navbar currentUser={currentUser} />
             <div className="pb-20 pt-[4.5rem]">{children}</div>
             <Footer />

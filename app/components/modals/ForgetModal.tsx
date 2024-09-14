@@ -13,33 +13,29 @@ import Button from "../Button";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import { signIn } from "next-auth/react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import useForgetModal from "@/app/hooks/useForgetModal";
 
-const RegisterModal = () => {
+const ForgetModal = () => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const [isLoading, setisLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-
+  const forgetModal = useForgetModal();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FieldValues>({
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      phoneNumber: "",
-    },
+    defaultValues: {},
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setisLoading(true);
     axios
-      .post("/api/register", data)
+      .post("/api/forget", data)
       .then(() => {
-        registerModal.onClose();
-        toast.success("Please Verify Mail! ");
+        forgetModal.onClose();
+        toast.success("Please Check your Mail ");
       })
       .catch((error) => {
         const errorMessage =
@@ -59,24 +55,6 @@ const RegisterModal = () => {
       <Heading title="Welcome to Xpress" subtitle="Create an account!" center />
 
       <Input
-        id="name"
-        label="Name"
-        disabled={isLoading}
-        register={register}
-        required
-        errors={errors}
-      />
-      <Input
-        id="phoneNumber"
-        label="Phone Number"
-        disabled={isLoading}
-        register={register}
-        required
-        type="number"
-        errors={errors}
-        maxLength={10}
-      />
-      <Input
         type="email"
         id="email"
         label="Email"
@@ -86,66 +64,20 @@ const RegisterModal = () => {
         errors={errors}
         pattern="^[a-zA-Z0-9._%+-]+@(gmail\.com|icloud\.com)$"
       />
-      <Input
-        id="password"
-        label="Password"
-        type={isVisible ? "text" : "password"}
-        disabled={isLoading}
-        register={register}
-        required
-        errors={errors}
-        icon={
-          isVisible ? (
-            <FaEyeSlash onClick={() => setIsVisible(false)} />
-          ) : (
-            <FaEye onClick={() => setIsVisible(true)} />
-          )
-        }
-        iconPosition="right"
-      />
     </div>
   );
 
   const footerContent = (
     <div className="flex flex-col gap-4 mt-3">
-      <hr />
-      <Button
-        outline
-        label="Continue with Google"
-        icon={FcGoogle}
-        onClick={() => signIn("google")}
-      />
-      <div
-        className="
-          text-neutral-500 
-          text-center 
-          mt-4 
-          font-light
-        "
-      >
-        <p>
-          Already have an account?
-          <span
-            onClick={onToggle}
-            className="
-              text-neutral-800
-              cursor-pointer 
-              hover:underline
-            "
-          >
-            Log in
-          </span>
-        </p>
-      </div>
     </div>
   );
   return (
     <Modal
       disabled={isLoading}
-      isOpen={registerModal.isOpen}
-      title="Register"
+      isOpen={forgetModal.isOpen}
+      title="Forget"
       actionLabel="Continue"
-      onClose={registerModal.onClose}
+      onClose={forgetModal.onClose}
       onSubmit={handleSubmit(onSubmit)}
       body={bodyContent}
       footer={footerContent}
@@ -153,4 +85,4 @@ const RegisterModal = () => {
   );
 };
 
-export default RegisterModal;
+export default ForgetModal;

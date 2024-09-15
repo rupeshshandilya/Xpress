@@ -109,12 +109,12 @@ const ListingCard: React.FC<ListingCardProps> = ({
         )}
         <div className="font-semibold text-lg text-black-500">
           {revenueMap && revenueMap.hasOwnProperty(data.id)
-            ? revenueMap[data.id]
+            ? `Total Earning: ${revenueMap[data.id]}`
             : null}
         </div>
         <div className="font-semibold text-lg text-black-500">
           {dueAmountMap && dueAmountMap.hasOwnProperty(data.id)
-            ? dueAmountMap[data.id]
+            ? `Due Amount: ${dueAmountMap[data.id]}`
             : null}
         </div>
 

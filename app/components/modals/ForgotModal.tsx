@@ -15,7 +15,7 @@ import { signIn } from "next-auth/react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import useForgetModal from "@/app/hooks/useForgetModal";
 
-const ForgetModal = () => {
+const ForgotModal = () => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const [isLoading, setisLoading] = useState(false);
@@ -52,7 +52,7 @@ const ForgetModal = () => {
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
-      <Heading title="Welcome to Xpress" subtitle="Create an account!" center />
+      <Heading title="" subtitle="Please Enter Your Email to get password Reset Link" center />
 
       <Input
         type="email"
@@ -75,7 +75,7 @@ const ForgetModal = () => {
     <Modal
       disabled={isLoading}
       isOpen={forgetModal.isOpen}
-      title="Forget"
+      title="Forgot Password?"
       actionLabel="Continue"
       onClose={forgetModal.onClose}
       onSubmit={handleSubmit(onSubmit)}
@@ -85,4 +85,4 @@ const ForgetModal = () => {
   );
 };
 
-export default ForgetModal;
+export default ForgotModal;

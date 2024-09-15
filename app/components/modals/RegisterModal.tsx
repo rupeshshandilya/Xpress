@@ -56,7 +56,7 @@ const RegisterModal = () => {
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
-      <Heading title="Welcome to Xpress" subtitle="Create an account!" center />
+      <Heading title="Welcome to TheXpressSalon" subtitle="Create an account!" center />
 
       <Input
         id="name"

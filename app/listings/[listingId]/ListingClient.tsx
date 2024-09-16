@@ -12,6 +12,7 @@ import { toast } from "react-hot-toast";
 import ListingReservation from "@/app/components/listings/ListingReservation";
 import { Feature } from "@prisma/client";
 import Reviews from "@/app/reviewsClient/Review";
+import Button from "../../components/Button";
 import {
   addDays,
   eachMinuteOfInterval,
@@ -23,6 +24,7 @@ import {
   startOfToday,
 } from "date-fns";
 import Razorpay from "razorpay";
+import { sendReservationMail } from "@/app/helpers/reservationMail";
 
 const initialDateRange = {
   startDate: new Date(),
@@ -170,7 +172,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   };
   const applyOfftime = () => {
     axios
-      .patch(`https://book.thexpresssalon.com/api/listings/${listing.id}`, {
+      .patch(`http://localhost:3000/api/listings/${listing.id}`, {
         offTime: offTimes,
         features: editFeatures,
       })
@@ -273,7 +275,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
       try {
         const key = process.env.RAZORPAY_API_KEY;
-        const data = await fetch("https://book.thexpresssalon.com/api/razorpay", {
+        const data = await fetch("http://localhost:3000/api/razorpay", {
           method: "POST",
           body: JSON.stringify({
             totalPriceAfterTaxid: parseFloat(totalPriceAfterTax),
@@ -295,7 +297,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
           }) {
             console.log("HERE" + response);
             const data = await fetch(
-              "https://book.thexpresssalon.com/api/paymentverify",
+              "http://localhost:3000/api/paymentverify",
               {
                 method: "POST",
                 body: JSON.stringify({
@@ -311,7 +313,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
             console.log("response verify==", res);
 
             if (res?.message == "success") {
-              fetch("https://book.thexpresssalon.com/api/paymentregister", {
+              fetch("http://localhost:3000/api/paymentregister", {
                 method: "POST",
                 body: JSON.stringify({
                   listingId: listing?.id,
@@ -322,10 +324,30 @@ const ListingClient: React.FC<ListingClientProps> = ({
               })
                 .then((res) => {
                   if (res) {
+                    const reservationDetails = {
+                      totalPrice: parseInt(totalPriceAfterTax),
+                      startDate: selectedTimeFeature.map((date) =>
+                        date.toISOString()
+                      ),
+                      startTime: selectedTimeFeature.map((date) =>
+                        date.toISOString()
+                      ),
+                      listingId: listing.id,
+                      features: selectedFeatures,
+                    };
                     const saveRes = async () => {
-                      console.log("This is ", selectedTimeFeature);
                       await axios
-                        .post("https://book.thexpresssalon.com/api/reservations", {
+                        .post(
+                          "http://localhost:3000/api/reservations",
+                          reservationDetails
+                        )
+                        .then((response) => {
+                          toast.success("Reserved Successfully");
+                        });
+                    };
+                    saveRes()
+                      .then(() => {
+                        const mailReservationDetails = {
                           totalPrice: parseInt(totalPriceAfterTax),
                           startDate: selectedTimeFeature.map((date) =>
                             date.toISOString()
@@ -333,16 +355,13 @@ const ListingClient: React.FC<ListingClientProps> = ({
                           startTime: selectedTimeFeature.map((date) =>
                             date.toISOString()
                           ),
-                          listingId: listing?.id,
+                          listingId: listing.id,
                           features: selectedFeatures,
-                        })
-                        .then(() => {
-                          toast.success("Reserved Successfully");
+                        }
+                        sendReservationMail({
+                          email: listing.user.email,
+                          details: mailReservationDetails 
                         });
-                    };
-                    saveRes()
-                      .then(() => {
-                        console.log("reserved");
                       })
                       .catch((error) => {
                         console.log(error);
@@ -357,7 +376,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
               setDateRange(initialDateRange);
               router.refresh();
               const res = await fetch(
-                "https://book.thexpresssalon.com/api/paymentregister",
+                "http://localhost:3000/api/paymentregister",
                 {
                   method: "POST",
                   body: JSON.stringify({
@@ -484,7 +503,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
             />
           </div>
           <div className="order-first mb-10 md:order-last md:col-span-3">
-            <ListingReservation
+            {/* <ListingReservation
               selectedTimeFeature={selectedTimeFeature}
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
@@ -504,7 +523,13 @@ const ListingClient: React.FC<ListingClientProps> = ({
               handleTimeSelect={handleTimeSelect}
               reserved={reserved}
               setSelectedTimeFeature={setSelectedTimeFeature}
-            />
+            /> */}
+             {/* <Button label="Reserve"  /> */}
+             <p 
+             className="text-xl border border-black text-center p-3 first-letter rounded-md bg-black text-white"
+             >
+              Booking Starting soon
+             </p>
           </div>
         </div>
       </div>

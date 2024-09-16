@@ -15,6 +15,7 @@ function generateOTP() {
 
 export async function POST(request: Request) {
   const currentUser = await getCurrentUser();
+  
   if (!currentUser) {
     return NextResponse.error();
   }
@@ -26,6 +27,7 @@ export async function POST(request: Request) {
     return NextResponse.error();
   }
   const dates=startDate.slice(0,features.length)
+  
   const reservationPromises = dates.map((date: Date, index: number) => {
     return prisma.reservation.create({
       data: {

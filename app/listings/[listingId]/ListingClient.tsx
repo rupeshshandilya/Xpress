@@ -503,7 +503,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
             />
           </div>
           <div className="order-first mb-10 md:order-last md:col-span-3">
-            {/* <ListingReservation
+            <ListingReservation
               selectedTimeFeature={selectedTimeFeature}
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
@@ -523,13 +523,12 @@ const ListingClient: React.FC<ListingClientProps> = ({
               handleTimeSelect={handleTimeSelect}
               reserved={reserved}
               setSelectedTimeFeature={setSelectedTimeFeature}
-            /> */}
-             {/* <Button label="Reserve"  /> */}
-             <p 
+            />
+             {/* <p 
              className="text-xl border border-black text-center p-3 first-letter rounded-md bg-black text-white"
              >
               Booking Starting soon
-             </p>
+             </p> */}
           </div>
         </div>
       </div>

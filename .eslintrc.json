@@ -14,6 +14,7 @@
     "@next/next/no-page-custom-font": "off",
     "@next/next/no-typos": "off",
     "no-undef": "off",
-    "@typescript-eslint/parser": "off"
+    "@typescript-eslint/parser": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
   }
 }
